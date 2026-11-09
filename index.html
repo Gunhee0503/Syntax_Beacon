@@ -272,7 +272,7 @@ h1{font-size:20px;font-weight:900;margin:3px 0 2px}
 .story .skip{margin-top:10px;border:none;background:none;color:rgba(255,255,255,.6);font:500 13px 'Noto Sans KR';cursor:pointer;text-decoration:underline}
 .uhead{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
 .clock{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--navy);background:#fff;border:1px solid #bfd6d8;border-radius:999px;padding:3px 10px;white-space:nowrap}
-.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:4px 0 10px;position:relative}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:4px 0 10px;position:relative}
 .stp{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font:inherit;color:var(--mute);position:relative;padding:0}
 .stp .c{width:34px;height:34px;border-radius:50%;background:#e6e2da;color:#8a857c;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;position:relative;z-index:1;transition:all .3s}
 .stp .l{font-size:12px;font-weight:700}
@@ -294,6 +294,18 @@ h1{font-size:20px;font-weight:900;margin:3px 0 2px}
 .chip.h1{border-color:#fbbf24;background:#fffbeb}.chip.h1 .cn{color:#b45309}.chip.h1 .dt i:first-child{background:#f59e0b}
 .chip.h2{border-color:#22c55e;background:#f0fdf4}.chip.h2 .cn{color:#15803d}.chip.h2 .dt i{background:#22c55e}
 .chip.cur{box-shadow:0 0 0 3px rgba(46,90,100,.25)}
+.chip .dt i.on{background:#22c55e}
+.chip.ip{border-color:#fbbf24;background:#fffbeb}.chip.ip .cn{color:#b45309}
+.chip.dn{border-color:#22c55e;background:#f0fdf4}.chip.dn .cn{color:#15803d}
+.chip.lk{opacity:.55;cursor:not-allowed}.chip.lk .cn{font-size:13px}
+.rsteps{display:flex;gap:4px;margin-bottom:10px}
+.rsteps span{flex:1;text-align:center;font-size:11.5px;font-weight:800;padding:6px 0;border-radius:8px;background:#f1efe9;color:#9a958c;white-space:nowrap}
+.rsteps span.on{background:var(--navy);color:#fff;box-shadow:0 0 0 3px rgba(46,90,100,.15)}
+.rsteps span.ok{background:#dcfce7;color:#15803d}.rsteps span.no{background:#fee2e2;color:#b91c1c}
+.qkind{font-size:11.5px;font-weight:900;border-radius:6px;padding:2px 8px;background:#eef2ff;color:#3730a3;margin-left:4px}
+.sgh{font-weight:900;font-size:13.5px;color:var(--navy);margin:16px 0 0;padding-left:2px}
+.rqend{text-align:center;font-size:13px;color:var(--mute);margin-top:8px}
+#rqBox{min-height:82vh}
 .chip.pop{animation:pop .6s ease}
 @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
 .rguide{display:flex;gap:8px;align-items:flex-start;background:var(--soft);border-radius:10px;padding:9px 11px;margin-bottom:12px;font-size:13px;line-height:1.55;color:#1f3d44}
@@ -533,18 +545,19 @@ h1{font-size:20px;font-weight:900;margin:3px 0 2px}
 <div class="unit"><div class="uhead"><span class="uc" id="uCode">CH 01 · UNIT 01</span><span class="clock" id="clock">⏱ 0분</span></div><h1 id="uTitle"></h1><div class="sub" id="uSub"></div></div>
 <div class="mon" id="mon"><div class="mic" id="monIc"></div><div class="mtx"><div class="mnm"><b id="monNm"></b><span id="monEn"></span></div><div class="mln" id="monLn"></div><div class="hpb"><i id="monHp" style="width:100%"></i></div><div class="hpt"><span id="monHpT">HP 100 / 100</span><span id="monSub"></span></div></div></div>
 <div class="steps" id="steps">
-  <button class="stp" data-t="listen"><span class="c">1</span><span class="l">듣기</span></button>
-  <button class="stp" data-t="gram"><span class="c">2</span><span class="l">문법</span></button>
-  <button class="stp" data-t="write"><span class="c">3</span><span class="l">서술형</span></button>
-  <button class="stp" data-t="read"><span class="c">4</span><span class="l">독해</span></button>
-  <button class="stp" data-t="done"><span class="c">5</span><span class="l">완료</span></button>
+  <button class="stp" data-t="listen"><span class="c">1</span><span class="l">문장 라운드</span></button>
+  <button class="stp" data-t="final"><span class="c">2</span><span class="l">최종 복습</span></button>
+  <button class="stp" data-t="done"><span class="c">3</span><span class="l">완료</span></button>
 </div>
 <div class="guidebar" id="guidebar"></div>
 
 <div id="pg-listen">
 <div class="chips" id="chips"></div>
+<div id="rqBox" hidden></div>
+<div id="lwrap">
 <div class="card">
   <div class="now"><span class="lab" id="lab">SENTENCE 01</span><span class="role" id="role"></span></div>
+  <div class="rsteps" id="rsteps"></div>
   <div class="rguide" id="rguide"></div>
   <div class="en" id="en"></div>
   <div class="ko" id="ko"></div>
@@ -565,10 +578,9 @@ h1{font-size:20px;font-weight:900;margin:3px 0 2px}
 </div>
 <div class="foot">이어폰을 끼고 들으면 더 잘 들려요 · Voice: ElevenLabs</div>
 </div>
+</div>
 
-<div id="pg-gram" hidden><div id="gBox"></div></div>
-<div id="pg-write" hidden><div id="wBox"></div></div>
-<div id="pg-read" hidden><div id="rBox"></div></div>
+<div id="pg-final" hidden><div id="fBox"></div></div>
 
 <div id="pg-done" hidden>
   <div id="dTop"></div>
@@ -604,13 +616,24 @@ function withUnit(id, fn) { const prev = UID; UID = id; try { return fn(); } fin
 const ymd = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 const esc2 = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let cur = 0, playing = false, paused = false, rate = 1, view = 'text', kov = 'auto', curKind = 'track';
-let heard, daily, gAtt, wAtt, rAtt, tsec, tday, gRes, wRes, rRes;
+let heard, daily, gAtt, wAtt, rAtt, fAtt, rnd, tsec, tday, gRes, wRes, rRes;
+const SUB = ['g', 'w', 'r'], SUBL = { g: '문법', w: '서술형', r: '독해' }, SEC = { g: G_SEC, w: W_SEC, r: R_SEC };
+// 문장별 라운드 답안 { g: 선택, w: [빈칸], r: 선택 } — 예전 방식 기록이 있으면 마지막 시험 답안으로 채움
+function rndFrom(u, gA, wA, rA, saved) {
+  if (Array.isArray(saved) && saved.length === u.D.length) return saved.map(x => x && typeof x === 'object' ? Object.assign({}, x) : {});
+  const r = u.D.map(() => ({})), last = a => a && a.length ? a[a.length - 1] : null, g = last(gA), w = last(wA), rd = last(rA);
+  if (g && g.a) u.G.forEach((_, i) => { if (i < g.a.length && r[i]) r[i].g = g.a[i]; });
+  if (w && w.a) u.W.forEach((_, i) => { if (i < w.a.length && r[i]) r[i].w = w.a[i] || []; });
+  if (rd && rd.a) u.RD.forEach((q, j) => { if (j < rd.a.length && r[q.sid]) r[q.sid].r = rd.a[j]; });
+  return r;
+}
 function reloadState() {
   heard = store.get('heard', [0,0,0,0,0]); daily = store.get('daily', {});
-  gAtt = store.get('gAtt', []); wAtt = store.get('wAtt', []); rAtt = store.get('rAtt', []);
+  gAtt = store.get('gAtt', []); wAtt = store.get('wAtt', []); rAtt = store.get('rAtt', []); fAtt = store.get('fAtt', []);
+  rnd = rndFrom(U, gAtt, wAtt, rAtt, store.get('rnd', null));
   tsec = store.get('time', 0); tday = store.get('tday', {});
   gRes = store.get('gRes', [null,null,null,null,null]); wRes = store.get('wRes', [null,null,null,null,null]); rRes = store.get('rRes', [null,null,null,null,null]);
-  if (READY) { show(cur); renderSteps(); updateClock(); if (curTab === 'done') renderDone(); }
+  if (READY) { show(cur); renderSteps(); updateClock(); if (curTab === 'done') renderDone(); if (curTab === 'final' && !Q.running) renderFinal(); }
 }
 let READY = false;
 const reviewed = { g: new Set(), w: new Set(), r: new Set() };
@@ -622,18 +645,23 @@ const lDone = () => lPassN() === D.length;
 const gDone = () => gAtt.some(a => a.p);
 const wDone = () => wAtt.some(a => a.p);
 const rDone = () => rAtt.some(a => a.p);
-const allDone = () => lDone() && gDone() && wDone() && rDone();
+const fDone = () => gDone() && wDone() && rDone();
+const allDone = () => lDone() && fDone();
+const rdIdx = i => RD.findIndex(q => q.sid === i);
+const rStage = i => (heard[i] || 0) < NEED ? 'listen' : (SUB.find(k => !(k in (rnd[i] || {}))) || 'done');
+const rDoneN = () => D.filter((_, i) => rStage(i) === 'done').length;
+const roundsDone = () => rDoneN() === D.length;
+const firstOpen = () => { const i = D.findIndex((_, j) => rStage(j) !== 'done'); return i < 0 ? 0 : i; };
+const unlocked = i => D.slice(0, i).every((_, j) => rStage(j) === 'done');
 const stars = pct => pct >= 1 ? 3 : pct >= .8 ? 2 : pct >= CUT ? 1 : 0;
 const starStr = n => '★★★'.split('').map((s, i) => `<i class="${i < n ? 'on' : ''}">★</i>`).join('');
 const fmtMin = s => { const m = Math.floor(s / 60); return m >= 60 ? `${Math.floor(m / 60)}시간 ${m % 60}분` : `${m}분`; };
 function stepState(t) {
-  if (t === 'listen') return lDone() ? 'done' : 'open';
-  if (t === 'gram') return gDone() ? 'done' : lDone() ? 'open' : 'lock';
-  if (t === 'write') return wDone() ? 'done' : gDone() ? 'open' : 'lock';
-  if (t === 'read') return rDone() ? 'done' : wDone() ? 'open' : 'lock';
+  if (t === 'listen') return roundsDone() ? 'done' : 'open';
+  if (t === 'final') return fDone() ? 'done' : roundsDone() ? 'open' : 'lock';
   return allDone() ? 'done' : 'open';
 }
-const LOCK_MSG = { gram: '듣기 5문장을 모두 2번씩 들으면 열려요', write: '문법을 60% 이상으로 통과하면 열려요', read: '서술형을 60% 이상으로 통과하면 열려요' };
+const LOCK_MSG = { final: '5개 문장 라운드를 모두 마치면 열려요' };
 
 // ---------- 효과: 폭죽 · 토스트 · 모달 ----------
 function confetti(power) {
@@ -690,7 +718,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 function updateClock() { $('clock').textContent = '⏱ ' + fmtMin(tsec); }
 
 // ---------- 단계 표시 ----------
-const PAGES = ['listen','gram','write','read','done'];
+const PAGES = ['listen','final','done'];
 let curTab = 'listen';
 function renderSteps() {
   renderMonster();
@@ -700,12 +728,13 @@ function renderSteps() {
     b.querySelector('.c').textContent = st === 'done' ? '✓' : st === 'lock' ? '🔒' : String(i + 1);
   });
   const g = $('guidebar');
-  if (curTab === 'listen') g.innerHTML = lDone() ? `<b>STEP 1 듣기 통과 ✓</b> 이제 문법 문제에 도전하세요!<span class="gp">더 들어도 좋아요. 반복할수록 문장이 입에 붙어요.</span>`
-    : `<b>STEP 1 · 듣기</b> 5문장을 <b>각각 2번 이상 끝까지</b> 들으면 통과! (${lPassN()}/5 통과)<span class="gp">1회차: 해석 보며 뜻 잡기 → 2회차: 영어 보며 소리 내어 따라 읽기 · 중간에 넘기면 횟수에 안 들어가요</span>`;
-  else if (curTab === 'gram') g.innerHTML = `<b>STEP 2 · 문법</b> 5문제 · 문항당 <b>${G_SEC}초</b> · 3문제(60%) 이상 맞히면 통과<span class="gp">시간이 끝나면 자동으로 다음 문제로 넘어가요</span>`;
-  else if (curTab === 'write') g.innerHTML = `<b>STEP 3 · 서술형</b> 5문항(빈칸 11개) · 문항당 <b>${W_SEC}초</b> · 빈칸 7개(60%) 이상 맞히면 통과<span class="gp">보기 단어를 필요하면 형태를 바꿔 쓰세요</span>`;
-  else if (curTab === 'read') g.innerHTML = `<b>STEP 4 · 독해</b> 문장별 요지·제목 5문항 · 5지선다 · 문항당 <b>${R_SEC}초</b> · 3문제(60%) 이상 통과<span class="gp">핵심 표현이 무엇을 말하는지 떠올리며 고르세요</span>`;
-  else g.innerHTML = allDone() ? `<b>${monOf(U).name} 격퇴 🏆</b> 모든 단계를 통과했어요!` : `<b>STEP 5 · 완료</b> 남은 단계를 끝내면 트로피를 받아요`;
+  if (curTab === 'listen') {
+    const st = rStage(cur);
+    g.innerHTML = roundsDone() ? `<b>문장 라운드 5/5 완료 ✓</b> ${fDone() ? '최종 복습까지 통과했어요!' : '이제 <b>최종 복습</b>으로 마지막 일격!'}<span class="gp">문장을 더 들어도 좋아요. 반복할수록 입에 붙어요.</span>`
+      : `<b>문장 라운드 ${rDoneN()}/5</b> 한 문장씩 <b>듣기 2회 → 문법 → 서술형 → 독해</b>를 끝내고 다음 문장으로!<span class="gp">${st === 'listen' ? '1회차: 해석 보며 뜻 잡기 → 2회차: 영어 보며 소리 내어 따라 읽기 · 중간에 넘기면 횟수에 안 들어가요' : `제한시간 문법 ${G_SEC}초 · 서술형 ${W_SEC}초 · 독해 ${R_SEC}초 · 틀려도 해설을 보고 넘어가요`}</span>`;
+  }
+  else if (curTab === 'final') g.innerHTML = `<b>최종 복습</b> 5문장의 문법·서술형·독해 <b>15문항</b>을 섞어서 풀어요 · 전체 <b>60% 이상</b>이면 통과<span class="gp">문법 ${G_SEC}초 · 서술형 ${W_SEC}초 · 독해 ${R_SEC}초 · 시간이 끝나면 자동으로 넘어가요</span>`;
+  else g.innerHTML = allDone() ? `<b>${monOf(U).name} 격퇴 🏆</b> 모든 단계를 통과했어요!` : `<b>완료</b> 남은 단계를 끝내면 트로피를 받아요`;
 }
 document.querySelectorAll('.stp').forEach(b => b.onclick = () => {
   const t = b.dataset.t;
@@ -714,35 +743,47 @@ document.querySelectorAll('.stp').forEach(b => b.onclick = () => {
 });
 function goTab(t) {
   if (t === 'record') t = 'done';
+  if (['gram', 'write', 'read'].includes(t)) t = 'final';
   if (!PAGES.includes(t)) t = 'listen';
-  if (stepState(t) === 'lock') t = !lDone() ? 'listen' : 'gram';
-  if (t !== curTab) quizAbort();
+  if (stepState(t) === 'lock') t = 'listen';
+  quizAbort(); rqShow(false);
   if (t !== 'listen') stopAudio();
   curTab = t;
   PAGES.forEach(k => $('pg-' + k).hidden = k !== t);
-  if (t === 'gram') renderQuiz('g'); else if (t === 'write') renderQuiz('w'); else if (t === 'read') renderQuiz('r'); else if (t === 'done') renderDone(); else show(cur);
+  if (t === 'final') renderFinal(); else if (t === 'done') renderDone(); else show(cur);
   renderSteps();
   try { history.replaceState(null, '', '#' + UID + (t === 'listen' ? '' : '-' + t)); } catch (e) {}
   window.scrollTo(0, 0);
 }
 
-// ---------- 듣기 ----------
+// ---------- 문장 라운드 (듣기 → 문법 → 서술형 → 독해) ----------
+const norm = t => t.toLowerCase().replace(/[’']/g, "'").replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
+const wHits = (q, v) => q.ans.filter((acc, b) => acc.some(a => norm(a) === norm((v || [])[b] || ''))).length;
+function isOk(k, i, v) { if (k === 'g') return v === G[i].ans; if (k === 'r') return v === RD[rdIdx(i)].ans; return wHits(W[i], v) === W[i].ans.length; }
 function renderChips() {
-  $('chips').innerHTML = D.map((s, i) => { const h = heard[i] || 0;
-    return `<button class="chip ${h >= NEED ? 'h2' : h >= 1 ? 'h1' : ''}${i === cur ? ' cur' : ''}" data-i="${i}"><span class="cn">${h >= NEED ? '✓' : s.n}</span><span class="dt"><i></i><i></i></span></button>`; }).join('');
-  $('chips').querySelectorAll('.chip').forEach(b => b.onclick = () => { stopAudio(); cur = +b.dataset.i; paused = false; store.set('pos', cur); show(cur); });
+  $('chips').innerHTML = D.map((s, i) => { const st = rStage(i), lk = !unlocked(i), h = heard[i] || 0, r = rnd[i] || {};
+    const dots = [h >= 1, h >= NEED, 'g' in r, 'w' in r, 'r' in r];
+    return `<button class="chip ${st === 'done' ? 'dn' : lk ? 'lk' : (h || 'g' in r) ? 'ip' : ''}${i === cur ? ' cur' : ''}" data-i="${i}"><span class="cn">${st === 'done' ? '✓' : lk ? '🔒' : s.n}</span><span class="dt">${dots.map(x => `<i class="${x ? 'on' : ''}"></i>`).join('')}</span></button>`; }).join('');
+  $('chips').querySelectorAll('.chip').forEach(b => b.onclick = () => { const i = +b.dataset.i;
+    if (!unlocked(i)) { toast(`🔒 ${D[firstOpen()].n}번 문장 라운드를 먼저 끝내요`); return; }
+    quizAbort(); rqShow(false); stopAudio(); cur = i; paused = false; store.set('pos', cur); show(cur); renderSteps(); });
 }
 function show(i) {
-  const s = D[i], h = heard[i] || 0;
+  const s = D[i], h = heard[i] || 0, st = rStage(i), r = rnd[i] || {};
   $('lab').textContent = 'SENTENCE ' + String(s.n).padStart(2,'0');
   $('role').textContent = s.role;
   $('en').textContent = s.en; $('ko').textContent = s.ko;
   $('en').classList.toggle('blind', view === 'blind');
-  $('ko').classList.toggle('show', h === 0);
-  $('rguide').className = 'rguide' + (h >= NEED ? ' ok' : '');
-  $('rguide').innerHTML = h === 0 ? (kov === 'off' ? `<span class="rn">1회차</span><span>문장의 <b>뜻을 떠올리며</b> 들어 보세요.</span>` : `<span class="rn">1회차</span><span>아래 <b>해석</b>을 먼저 읽고, 뜻을 떠올리며 들어 보세요.</span>`)
-    : h === 1 ? `<span class="rn">2회차</span><span><b>영어 문장</b>을 눈으로 따라가며 <b>소리 내어 따라 읽어요</b>.</span>`
-    : `<span class="rn">통과 ✓</span><span>잘했어요! 설정에서 <b>문장 가리기</b>를 켜고 한 번 더 들어 보면 실력이 쑥 올라요.</span>`;
+  const cell = (lab, cls) => `<span class="${cls}">${lab}</span>`;
+  $('rsteps').innerHTML = cell(`${h >= NEED ? '✓' : '🎧'} 듣기 ${Math.min(h, NEED)}/${NEED}`, h >= NEED ? 'ok' : st === 'listen' ? 'on' : '')
+    + SUB.map(k => k in r ? cell(`${isOk(k, i, r[k]) ? '⭕' : '❌'} ${SUBL[k]}`, isOk(k, i, r[k]) ? 'ok' : 'no') : cell(SUBL[k], st === k ? 'on' : '')).join('');
+  $('rguide').className = 'rguide' + (st === 'done' ? ' ok' : '');
+  $('rguide').innerHTML = st === 'listen' ? (h === 0 ? (kov === 'off' ? `<span class="rn">1회차</span><span>문장의 <b>뜻을 떠올리며</b> 들어 보세요.</span>` : `<span class="rn">1회차</span><span>아래 <b>해석</b>을 먼저 읽고, 뜻을 떠올리며 들어 보세요.</span>`)
+      : `<span class="rn">2회차</span><span><b>영어 문장</b>을 눈으로 따라가며 <b>소리 내어 따라 읽어요</b>.</span>`)
+    : st === 'g' ? `<span class="rn">문법</span><span>듣기 통과 ✓ 이제 이 문장의 <b>[ ]에 알맞은 것</b>을 ${G_SEC}초 안에 골라요. 아래 학습 노트를 먼저 훑어봐도 좋아요.</span>`
+    : st === 'w' ? `<span class="rn">서술형</span><span>보기 단어를 <b>알맞은 형태로 바꿔</b> 빈칸을 채워요. 제한시간 ${W_SEC}초.</span>`
+    : st === 'r' ? `<span class="rn">독해</span><span>이 문장의 <b>${RD[rdIdx(i)].type}</b>를 5개 선택지에서 골라요. 제한시간 ${R_SEC}초.</span>`
+    : `<span class="rn">클리어 ✓</span><span>이 문장 라운드를 마쳤어요! 설정에서 <b>문장 가리기</b>를 켜고 한 번 더 들어 보면 실력이 쑥 올라요.</span>`;
   $('ldots').innerHTML = `${[0,1].map(k => `<i class="${h > k ? 'on' : ''}"></i>`).join('')}<span style="margin-left:4px">${h}회 들음</span>`;
   $('nnum').textContent = 'SENTENCE ' + String(s.n).padStart(2,'0');
   const vc = v => `<div class="vc"><div><span class="w">${v.w}</span><span class="k">${v.ko}</span>${v.lv ? `<span style="margin-left:6px;font-size:11px;font-weight:700;color:#1d4ed8;background:#dbeafe;border-radius:4px;padding:1px 6px">${v.lv}</span>` : ''}</div><div class="d">Def: ${v.def}</div><ul>${v.ex.map(e => `<li>• ${e}</li>`).join('')}</ul><div class="e">어원: ${v.et}</div></div>`;
@@ -753,18 +794,19 @@ function show(i) {
   $('ko').classList.toggle('show', kov === 'on' || (kov === 'auto' && h === 0));
   renderChips(); renderMain();
 }
-const nextTodo = () => { for (let k = 1; k <= D.length; k++) { const j = (cur + k) % D.length; if ((heard[j] || 0) < NEED) return j; } return -1; };
 function renderMain() {
-  const b = $('bMain'), h = heard[cur] || 0;
+  const b = $('bMain'), h = heard[cur] || 0, st = rStage(cur);
   b.className = 'big'; b.disabled = false;
   if (playing) { b.className = 'big pause'; b.innerHTML = '❚❚ 일시정지'; }
   else if (paused) b.innerHTML = '▶ 이어서 듣기';
-  else if (h < NEED) b.innerHTML = `▶ ${D[cur].n}번 문장 ${h + 1}회차 듣기`;
-  else if (!lDone()) { b.className = 'big go'; b.innerHTML = `다음 문장 (${D[nextTodo()].n}번) →`; }
-  else { b.className = 'big go'; b.innerHTML = '듣기 통과! 문법 도전하기 →'; }
-  $('st').textContent = playing ? '재생 중…' : paused ? '일시정지' : h >= NEED ? '이 문장 통과 ✓' : `통과까지 ${NEED - h}번 남음`;
+  else if (st === 'listen') b.innerHTML = `▶ ${D[cur].n}번 문장 ${h + 1}회차 듣기`;
+  else if (SUB.includes(st)) { b.className = 'big go'; b.innerHTML = `${st === 'g' ? '📝' : st === 'w' ? '✍️' : '📖'} ${SUBL[st]} 문제 풀기 (${SEC[st]}초) →`; }
+  else if (!roundsDone()) { b.className = 'big go'; b.innerHTML = `다음 문장 (${D[firstOpen()].n}번) 라운드 →`; }
+  else if (!fDone()) { b.className = 'big go'; b.innerHTML = '⚔ 최종 복습 도전하기 →'; }
+  else { b.className = 'big go'; b.innerHTML = '완료 화면으로 →'; }
+  $('st').textContent = playing ? '재생 중…' : paused ? '일시정지' : st === 'listen' ? `듣기 통과까지 ${NEED - h}번 남음` : st === 'done' ? '이 문장 라운드 클리어 ✓' : '듣기 통과 ✓';
   $('bPrev').disabled = cur === 0 || playing;
-  $('bNextS').disabled = cur === D.length - 1 || playing;
+  $('bNextS').disabled = cur === D.length - 1 || playing || !unlocked(cur + 1);
   $('bAgain').disabled = playing || h === 0;
 }
 function load(i, kind) { curKind = kind; A.src = kind === 'track' ? D[i].track : D[i].rep; A.playbackRate = rate; try { A.preservesPitch = true; } catch (e) {} }
@@ -776,28 +818,25 @@ function playNow() {
 function playCur() { load(cur, (heard[cur] || 0) === 0 ? 'track' : 'rep'); playNow(); }
 function stopAudio() { if (playing || paused) { A.pause(); playing = false; paused = false; $('prog').style.width = '0'; renderMain(); } }
 $('bMain').onclick = () => {
-  const h = heard[cur] || 0;
   if (playing) { A.pause(); playing = false; paused = true; renderMain(); return; }
   if (paused) { playNow(); return; }
-  if (h < NEED) { playCur(); return; }
-  if (!lDone()) { cur = nextTodo(); store.set('pos', cur); show(cur); playCur(); return; }
-  goTab('gram');
+  const st = rStage(cur);
+  if (st === 'listen') { playCur(); return; }
+  if (SUB.includes(st)) { rqStart(cur, st); return; }
+  if (!roundsDone()) { cur = firstOpen(); store.set('pos', cur); show(cur); renderSteps(); window.scrollTo(0, 0); return; }
+  goTab(fDone() ? 'done' : 'final');
 };
 $('bAgain').onclick = () => { stopAudio(); load(cur, 'rep'); playNow(); };
-$('bPrev').onclick = () => { stopAudio(); cur = Math.max(0, cur - 1); store.set('pos', cur); show(cur); };
-$('bNextS').onclick = () => { stopAudio(); cur = Math.min(D.length - 1, cur + 1); store.set('pos', cur); show(cur); };
+$('bPrev').onclick = () => { stopAudio(); cur = Math.max(0, cur - 1); store.set('pos', cur); show(cur); renderSteps(); };
+$('bNextS').onclick = () => { if (!unlocked(cur + 1)) return; stopAudio(); cur = Math.min(D.length - 1, cur + 1); store.set('pos', cur); show(cur); renderSteps(); };
 A.addEventListener('ended', () => {
-  const wasDone = lDone();
   heard[cur] = (heard[cur] || 0) + 1; store.set('heard', heard);
   const t = ymd(new Date()); daily[t] = (daily[t] || 0) + 1; store.set('daily', daily);
   playing = false; paused = false;
   show(cur); renderSteps();
   if (heard[cur] === NEED) {
     const c = $('chips').children[cur]; if (c) c.classList.add('pop');
-    if (lDone() && !wasDone) {
-      confetti(2);
-      setTimeout(() => modal('🎧', '듣기 통과!', '5문장을 모두 2번 이상 들었어요.<br>이제 <b>문법 5문제</b>에 도전해 볼까요?<br><span style="font-size:12px;color:#6b7280">문항당 15초 · 3문제 이상 맞히면 통과</span>', '문법 도전하기 →', () => goTab('gram'), '조금 더 들을래요'), 700);
-    } else { confetti(1); toast(`🎉 ${D[cur].n}번 통과! ⚔ ${monOf(U).name} -5 (${lPassN()}/5)`); }
+    confetti(1); toast(`🎧 ${D[cur].n}번 듣기 통과! ⚔ -3 · 이제 문법 문제에 도전!`);
   } else if (heard[cur] < NEED) toast(`좋아요! ${D[cur].n}번 문장 ${heard[cur]}회 · 한 번 더 들으면 통과`);
 });
 A.addEventListener('timeupdate', () => { if (A.duration) $('prog').style.width = (A.currentTime / A.duration * 100) + '%'; });
@@ -821,85 +860,113 @@ function setUnit(id) {
   cur = store.get('pos', 0); if (!(cur >= 0 && cur < D.length)) cur = 0;
   paused = false; playing = false;
   lastHP = null; lastHPUnit = null;
+  if (READY) rqShow(false);
   renderHeader(); reloadState();
+  if (!roundsDone() && !unlocked(cur)) { cur = firstOpen(); if (READY) { show(cur); renderSteps(); } }
 }
 renderHeader();
 cur = store.get('pos', 0); if (!(cur >= 0 && cur < D.length)) cur = 0;
+if (!roundsDone() && !unlocked(cur)) cur = firstOpen();
 show(cur); updateClock();
 
-// ---------- 문법 · 서술형 (타이머 퀴즈) ----------
-const norm = t => t.toLowerCase().replace(/[’']/g, "'").replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
-const Q = { kind: null, i: 0, ans: [], timer: null, left: 0, running: false, lock: false };
-
+// ---------- 타이머 문제 엔진 (라운드 1문항 · 최종 복습 15문항) ----------
+const Q = { mode: null, items: [], box: 'fBox', i: 0, ans: [], timer: null, left: 0, running: false, lock: false, to: 0, tok: { g: 0, w: 0, r: 0 } };
 function quizAbort() { clearInterval(Q.timer); Q.running = false; document.querySelectorAll('.cd').forEach(x => x.remove()); }
+function rqShow(on) { $('lwrap').hidden = on; $('rqBox').hidden = !on; if (!on) $('rqBox').innerHTML = ''; }
 function attList(k) { return k === 'g' ? gAtt : k === 'w' ? wAtt : rAtt; }
 function lastAtt(k) { const a = attList(k); return a.length ? a[a.length - 1] : null; }
 function wrongKeys(k, a) { return k === 'w' ? a.w : a.w.map(String); }
-function renderQuiz(k) {
-  const box = $(k + 'Box'), att = attList(k), la = lastAtt(k), passed = att.some(a => a.p);
-  const total = k === 'g' ? G.length : k === 'r' ? RD.length : W.reduce((s, q) => s + q.ans.length, 0), need = Math.ceil(total * CUT);
-  const title = k === 'g' ? '문법 · 어법 선택' : k === 'r' ? '독해 · 요지와 제목' : '서술형 · 빈칸 완성';
-  let html = '';
-  if (la) {
-    const pct = la.s / la.n;
-    html += `<div class="qcard res"><div class="stars">${starStr(stars(pct))}</div><div class="pct">${la.s}<small>/ ${la.n}</small></div>`
-      + `<div class="verdict ${la.p ? 'p' : 'f'}">${la.p ? '통과! 🎉' : '재시험 필요'}</div><div class="cut">${att.length}회차 · 통과 기준 ${need}/${total} (60%)${la.to ? ` · 시간 초과 ${la.to}` : ''}</div></div>`;
-    html += `<div style="margin-top:10px">` + reviewHTML(k, la) + `</div>`;
-  } else {
-    html += `<div class="qcard"><h3>${title}</h3><ul class="rules">`
-      + (k === 'r' ? `<li><span>📖</span>각 문장의 <b>요지</b>(3문항) 또는 <b>제목</b>(2문항)을 5개 선택지에서 고르기</li><li><span>⏱</span>문항당 <b>${R_SEC}초</b> — 시간이 끝나면 자동으로 넘어가요</li><li><span>🎯</span><b>3문제(60%) 이상</b> 맞히면 통과</li>`
-         : k === 'g' ? `<li><span>📝</span>문장 속 [ ] 에서 알맞은 것을 고르는 5문제</li><li><span>⏱</span>문항당 <b>${G_SEC}초</b> — 시간이 끝나면 자동으로 넘어가요</li><li><span>🎯</span><b>3문제(60%) 이상</b> 맞히면 통과</li>`
-                   : `<li><span>✍️</span>보기 단어를 필요하면 형태를 바꿔 빈칸에 쓰는 5문항 (빈칸 11개)</li><li><span>⏱</span>문항당 <b>${W_SEC}초</b> — 시간이 끝나면 쓴 데까지 자동 제출</li><li><span>🎯</span><b>빈칸 7개(60%) 이상</b> 맞히면 통과</li>`)
-      + `<li><span>🔁</span>60% 미만이면 오답 해설을 확인한 뒤 재시험</li></ul></div>`;
-  }
-  const wk = la && !la.p ? wrongKeys(k, la) : [], needRev = wk.filter(x => !reviewed[k].has(x)).length;
-  const nextBtn = passed ? `<button class="big go" id="${k}Next">${k === 'g' ? '서술형 도전하기 →' : k === 'w' ? '독해 도전하기 →' : '완료 화면으로 →'}</button>` : '';
-  const startLabel = !la ? '시작하기 (3·2·1)' : la.p ? '다시 풀어보기 (선택)' : needRev ? `오답 해설 ${needRev}개를 확인하면 재시험이 열려요` : '재시험 시작 (3·2·1)';
-  html += nextBtn + `<button class="big${passed ? ' pause' : ''}" id="${k}Start" ${la && !la.p && needRev ? 'disabled' : ''}>${startLabel}</button>`;
-  if (att.length) html += `<div class="hist">` + att.map((a, i) => `<div class="hrow"><span>${i + 1}회차 · ${a.d.slice(5).replace('-', '/')}</span><b>${a.s}/${a.n}</b><span class="tag2 ${a.p ? 'tg-p' : 'tg-f'}">${a.p ? '통과' : '재시험'}</span></div>`).reverse().join('') + `</div>`;
-  box.innerHTML = html;
-  $(k + 'Start').onclick = () => quizStart(k);
-  const nb = $(k + 'Next'); if (nb) nb.onclick = () => goTab(k === 'g' ? 'write' : k === 'w' ? 'read' : 'done');
-  box.querySelectorAll('.ck').forEach(b => b.onclick = () => { b.dataset.k.split(',').forEach(x => reviewed[k].add(x)); renderQuiz(k); });
-}
-function reviewHTML(k, a) {
-  const wset = new Set(wrongKeys(k, a));
-  if (k === 'r') return RD.map((q, i) => { const bad = wset.has(String(i)), pick = a.a ? a.a[i] : null;
-    return `<div class="rv ${bad ? 'no' : 'ok'}"><div class="h"><span>${i + 1}. ${D[q.sid].n}번 문장 ${q.type}</span><span class="tag2 ${bad ? 'tg-f' : 'tg-p'}">${bad ? (pick === null || pick === undefined ? '시간 초과' : '오답') : '정답'}</span></div>`
+// 해설 카드 1개: k = 종류, i = 문항 번호(독해는 RD 번호), a = {a: 답안, w: 오답 키}, gate = 해설 확인 버튼 표시
+function rvItem(k, i, a, gate) {
+  const wset = new Set(wrongKeys(k, a)), ckb = (keys, all) => gate ? `<button class="ck${all ? ' on' : ''}" data-q="${k}" data-k="${keys}">${all ? '✓ 해설 확인 완료' : '해설을 읽었어요 (눌러서 확인)'}</button>` : '';
+  if (k === 'r') { const q = RD[i], bad = wset.has(String(i)), pick = a.a ? a.a[i] : null;
+    return `<div class="rv ${bad ? 'no' : 'ok'}"><div class="h"><span>독해 · ${q.type}</span><span class="tag2 ${bad ? 'tg-f' : 'tg-p'}">${bad ? (pick === null || pick === undefined ? '시간 초과' : '오답') : '정답'}</span></div>`
       + `<div class="s">${D[q.sid].en}</div><div style="font-size:13px;color:#15803d;font-weight:700">정답 ${'①②③④⑤'[q.ans]} ${q.opts[q.ans]}</div>`
-      + (bad ? `<div class="y">${pick !== null && pick !== undefined ? `내 답: ${'①②③④⑤'[pick]} ${q.opts[pick]}<br>` : ''}${q.why}</div>` + (!a.p ? `<button class="ck${reviewed.r.has(String(i)) ? ' on' : ''}" data-k="${i}">${reviewed.r.has(String(i)) ? '✓ 해설 확인 완료' : '해설을 읽었어요 (눌러서 확인)'}</button>` : '') : '') + `</div>`; }).join('');
-  if (k === 'g') return G.map((q, i) => { const bad = wset.has(String(i)), pick = a.a ? a.a[i] : null;
-    return `<div class="rv ${bad ? 'no' : 'ok'}"><div class="h"><span>${i + 1}. ${q.point}</span><span class="tag2 ${bad ? 'tg-f' : 'tg-p'}">${bad ? (pick === null || pick === undefined ? '시간 초과' : '오답') : '정답'}</span></div>`
+      + (bad ? `<div class="y">${pick !== null && pick !== undefined ? `내 답: ${'①②③④⑤'[pick]} ${q.opts[pick]}<br>` : ''}${q.why}</div>` + ckb(String(i), reviewed.r.has(String(i))) : `<div class="y" style="color:#14532d">${q.why}</div>`) + `</div>`; }
+  if (k === 'g') { const q = G[i], bad = wset.has(String(i)), pick = a.a ? a.a[i] : null;
+    return `<div class="rv ${bad ? 'no' : 'ok'}"><div class="h"><span>문법 · ${q.point}</span><span class="tag2 ${bad ? 'tg-f' : 'tg-p'}">${bad ? (pick === null || pick === undefined ? '시간 초과' : '오답') : '정답'}</span></div>`
       + `<div class="s">${q.pre}<b style="color:#15803d">[${q.opts[q.ans]}]</b>${q.post}</div>`
-      + (bad ? `<div class="y">${pick !== null && pick !== undefined ? `내 답: ${q.opts[pick]} · ` : ''}${q.why}</div>` + (!a.p ? `<button class="ck${reviewed.g.has(String(i)) ? ' on' : ''}" data-k="${i}">${reviewed.g.has(String(i)) ? '✓ 해설 확인 완료' : '해설을 읽었어요 (눌러서 확인)'}</button>` : '') : '') + `</div>`; }).join('');
-  return W.map((q, i) => { const keys = q.ans.map((_, b) => i + '-' + b), bad = keys.some(x => wset.has(x)), mine = a.a ? a.a[i] || [] : [];
-    const body = esc2(q.text).replace(/\[\[(\d)\]\]/g, (m, b) => `<b style="color:${wset.has(i + '-' + b) ? '#b91c1c' : '#15803d'}">[${q.ans[b][0]}]</b>`);
-    return `<div class="rv ${bad ? 'no' : 'ok'}"><div class="h"><span>${i + 1}. ${q.points.filter((_, b) => wset.has(i + '-' + b)).join(' · ') || q.points.join(' · ')}</span><span class="tag2 ${bad ? 'tg-f' : 'tg-p'}">${q.ans.length - keys.filter(x => wset.has(x)).length}/${q.ans.length}</span></div>`
-      + `<div class="s">${body}</div>`
-      + (bad ? `<div class="y">내 답: ${q.ans.map((_, b) => `${'①②③④'[b]} ${esc2(mine[b] || '(빈칸)')}`).join(' · ')}<br>${q.why}</div>` + (!a.p ? keys.filter(x => wset.has(x)).slice(0, 1).map(() => `<button class="ck${keys.filter(x => wset.has(x)).every(x => reviewed.w.has(x)) ? ' on' : ''}" data-k="${keys.filter(x => wset.has(x)).join(',')}">${keys.filter(x => wset.has(x)).every(x => reviewed.w.has(x)) ? '✓ 해설 확인 완료' : '해설을 읽었어요 (눌러서 확인)'}</button>`).join('') : '') : '') + `</div>`; }).join('');
+      + (bad ? `<div class="y">${pick !== null && pick !== undefined ? `내 답: ${q.opts[pick]} · ` : ''}${q.why}</div>` + ckb(String(i), reviewed.g.has(String(i))) : `<div class="y" style="color:#14532d">${q.why}</div>`) + `</div>`; }
+  const q = W[i], keys = q.ans.map((_, b) => i + '-' + b), badK = keys.filter(x => wset.has(x)), bad = badK.length > 0, mine = a.a ? a.a[i] || [] : [];
+  const body = esc2(q.text).replace(/\[\[(\d)\]\]/g, (m, b) => `<b style="color:${wset.has(i + '-' + b) ? '#b91c1c' : '#15803d'}">[${q.ans[b][0]}]</b>`);
+  return `<div class="rv ${bad ? 'no' : 'ok'}"><div class="h"><span>서술형 · ${q.points.filter((_, b) => wset.has(i + '-' + b)).join(' · ') || q.points.join(' · ')}</span><span class="tag2 ${bad ? 'tg-f' : 'tg-p'}">${q.ans.length - badK.length}/${q.ans.length}</span></div>`
+    + `<div class="s">${body}</div>`
+    + (bad ? `<div class="y">내 답: ${q.ans.map((_, b) => `${'①②③④'[b]} ${esc2(mine[b] || '(빈칸)')}`).join(' · ')}<br>${q.why}</div>` + ckb(badK.join(','), badK.every(x => reviewed.w.has(x))) : `<div class="y" style="color:#14532d">${q.why}</div>`) + `</div>`;
 }
-function quizStart(k) {
+function itemWrong(k, i, v) {   // i = 문장 번호
+  if (k === 'g') return v === G[i].ans ? [] : [i];
+  if (k === 'r') { const j = rdIdx(i); return v === RD[j].ans ? [] : [j]; }
+  return W[i].ans.map((acc, b) => acc.some(x => norm(x) === norm((v || [])[b] || '')) ? null : i + '-' + b).filter(x => x !== null);
+}
+function countdown(big, sub, ms, then) {
+  const cd = document.createElement('div'); cd.className = 'cd'; document.body.appendChild(cd);
+  cd.innerHTML = `<b style="font-size:58px">${big}</b><span>${sub}</span>`;
+  setTimeout(() => { cd.remove(); if (Q.running) then(); }, ms);
+}
+// 라운드: 한 문장의 한 문항
+function rqStart(i, k) {
   stopAudio(); quizAbort();
-  Object.assign(Q, { kind: k, i: 0, ans: [], running: true, to: 0, lock: false });
+  Object.assign(Q, { mode: 'round', items: [{ k, i }], box: 'rqBox', i: 0, ans: [], running: true, to: 0, tok: { g: 0, w: 0, r: 0 }, lock: false });
+  rqShow(true); $('rqBox').innerHTML = '';
+  countdown(`${k === 'g' ? '📝' : k === 'w' ? '✍️' : '📖'} ${SUBL[k]}`, `${D[i].n}번 문장 · ${SEC[k]}초 · 집중!`, 900, quizQ);
+}
+function rqFeedback(i, k, v) {
+  const idx = k === 'r' ? rdIdx(i) : i, a = { a: [], w: itemWrong(k, i, v) }; a.a[idx] = v;
+  const nx = SUB[SUB.indexOf(k) + 1], ok = isOk(k, i, v);
+  $('rqBox').innerHTML = `<div class="qcard"><div class="qtop"><span class="qno">${D[i].n}번 문장 · ${SUBL[k]} ${ok ? '⭕ 정답' : '❌ 해설 확인'}</span></div>${rvItem(k, idx, a, false)}</div>`
+    + `<button class="big go" id="rqNext" style="margin-top:10px">${nx ? `다음: ${SUBL[nx]} 문제 (${SEC[nx]}초) →` : `🏁 ${D[i].n}번 라운드 완료!`}</button>`
+    + (nx ? `<div class="rqend">${SUB.indexOf(k) + 2} / 3 · 이 문장의 ${SUBL[nx]} 문제가 이어져요</div>` : '');
+  $('rqNext').onclick = () => { if (nx) rqStart(i, nx); else rqRoundEnd(i); };
+  renderChips(); renderSteps();
+  window.scrollTo(0, Math.max(0, $('chips').getBoundingClientRect().top + scrollY - 8));
+}
+function rqRoundEnd(i) {
+  rqShow(false);
+  const r = rnd[i], sc = SUB.filter(k => isOk(k, i, r[k])).length;
+  if (roundsDone()) {
+    cur = i; show(cur); renderSteps(); confetti(3);
+    setTimeout(() => modal('⚔', '5개 라운드 클리어!', `${monOf(U).name}이(가) 휘청거려요!<br>이제 <b>최종 복습 15문항</b>으로 마지막 일격을 날려요.<br><span style="font-size:12px;color:#6b7280">5문장의 문법·서술형·독해를 섞어서 · 전체 60% 이상이면 통과</span>`, '최종 복습 도전하기 →', () => goTab('final'), '조금 쉬었다 할게요'), 700);
+    return;
+  }
+  confetti(sc === 3 ? 2 : 1);
+  cur = firstOpen(); store.set('pos', cur); show(cur); renderSteps(); window.scrollTo(0, 0);
+  toast(`🏁 ${D[i].n}번 라운드 클리어! (${sc}/3 정답) · 다음은 ${D[cur].n}번 문장`);
+}
+// 최종 복습: 15문항을 섞되 같은 문장이 연달아 나오지 않게
+function buildFinal() {
+  const sh = a => { a = a.slice(); for (let x = a.length - 1; x > 0; x--) { const y = Math.floor(Math.random() * (x + 1)); [a[x], a[y]] = [a[y], a[x]]; } return a; };
+  const idx = D.map((_, i) => i); let out = [];
+  for (let t = 0; t < 80; t++) {
+    const p = { g: sh(idx), w: sh(idx), r: sh(idx) }; out = [];
+    for (let n = 0; n < D.length; n++) sh(SUB).forEach(k => out.push({ k, i: p[k][n] }));
+    if (out.every((x, j) => j === 0 || x.i !== out[j - 1].i)) break;
+  }
+  return out;
+}
+function finalStart() {
+  stopAudio(); quizAbort();
+  Object.assign(Q, { mode: 'final', items: buildFinal(), box: 'fBox', i: 0, ans: [], running: true, to: 0, tok: { g: 0, w: 0, r: 0 }, lock: false });
   const cd = document.createElement('div'); cd.className = 'cd'; document.body.appendChild(cd);
   let n = 3; const step = () => { if (!Q.running) { cd.remove(); return; }
     if (n === 0) { cd.innerHTML = `<b style="font-size:64px">START!</b>`; setTimeout(() => { cd.remove(); if (Q.running) quizQ(); }, 600); return; }
-    cd.innerHTML = `<b>${n}</b><span>문항당 ${k === 'g' ? G_SEC : k === 'w' ? W_SEC : R_SEC}초 · 집중!</span>`; n--; setTimeout(step, 800); };
+    cd.innerHTML = `<b>${n}</b><span>15문항 · 문법 ${G_SEC}초 · 서술형·독해 ${W_SEC}초</span>`; n--; setTimeout(step, 800); };
   step();
 }
 function quizQ() {
-  const k = Q.kind, box = $(k + 'Box'), N = k === 'g' ? G.length : k === 'r' ? RD.length : W.length, sec = k === 'g' ? G_SEC : k === 'r' ? R_SEC : W_SEC;
+  const it = Q.items[Q.i], k = it.k, i = it.i, box = $(Q.box), N = Q.items.length, sec = SEC[k];
   Q.lock = false; Q.left = sec * 10;
   let body = '';
-  if (k === 'r') { const q = RD[Q.i];
+  if (k === 'r') { const q = RD[rdIdx(i)];
     body = `<span class="rq-t">${q.type}</span><div class="rq-s">${D[q.sid].en}</div><div class="rq-q">다음 문장의 ${q.type}${q.type === '요지' ? '로' : '으로'} 가장 적절한 것은?</div><div class="ropts">${q.opts.map((o, j) => `<button class="ropt" data-j="${j}"><span class="rn2">${'①②③④⑤'[j]}</span><span>${o}</span></button>`).join('')}</div>`;
-  } else if (k === 'g') { const q = G[Q.i];
+  } else if (k === 'g') { const q = G[i];
     body = `<p class="qs-en">${q.pre}<span class="blank">?</span>${q.post}</p><div class="gopts">${q.opts.map((o, j) => `<button class="gopt" data-j="${j}">${o}</button>`).join('')}</div>`;
-  } else { const q = W[Q.i];
+  } else { const q = W[i];
     body = `<div class="bogi">보기 · ${q.words.map(w => `<span>${w}</span>`).join('')}</div><p class="qs-en">${esc2(q.text).replace(/\[\[(\d)\]\]/g, (m, b) => `<span class="blank">${'①②③④'[b]}</span>`)}</p>`
       + `<div class="wfields">${q.ans.map((_, b) => `<label>${'①②③④'[b]}<input data-b="${b}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="${b === q.ans.length - 1 ? 'done' : 'next'}"></label>`).join('')}</div><button class="big" id="wSubmit">제출 →</button>`;
   }
-  box.innerHTML = `<div class="qcard"><div class="qtop"><span class="qno">문제 ${Q.i + 1} / ${N}</span><span class="sec" id="qsec">${sec}</span></div><div class="tbar"><i id="qbar"></i></div>${body}</div>`;
+  const head = Q.mode === 'round' ? `<span class="qno">${D[i].n}번 문장 · ${SUBL[k]}</span>` : `<span class="qno">문제 ${Q.i + 1} / ${N}<span class="qkind">${SUBL[k]}</span></span>`;
+  { const tg = Q.mode === 'round' ? $('chips') : box, y = tg.getBoundingClientRect().top + scrollY - 8; if (Q.i === 0 || Q.mode === 'round') setTimeout(() => window.scrollTo(0, Math.max(0, y)), 0); }
+  box.innerHTML = `<div class="qcard"><div class="qtop">${head}<span class="sec" id="qsec">${sec}</span></div><div class="tbar"><i id="qbar"></i></div>${body}</div>`;
   if (k === 'g') box.querySelectorAll('.gopt').forEach(b => b.onclick = () => quizAnswer(+b.dataset.j, b));
   else if (k === 'r') box.querySelectorAll('.ropt').forEach(b => b.onclick = () => quizAnswer(+b.dataset.j, b));
   else {
@@ -914,49 +981,88 @@ function quizQ() {
     Q.left--; const s = Math.ceil(Q.left / 10), el = $('qsec'), bar = $('qbar'); if (!el) return;
     el.textContent = s; bar.style.width = (Q.left / (sec * 10) * 100) + '%';
     const warn = Q.left <= (k === 'g' ? 50 : 100); el.classList.toggle('warn', warn); bar.classList.toggle('warn', warn);
-    if (Q.left <= 0) { clearInterval(Q.timer); Q.to++;
+    if (Q.left <= 0) { clearInterval(Q.timer); Q.to++; Q.tok[k]++;
       if (k !== 'w') quizAnswer(null, null, true); else quizAnswer([...box.querySelectorAll('.wfields input')].map(x => x.value), null, true); }
   }, 100);
 }
 function quizAnswer(v, btn, timeout) {
   if (Q.lock || !Q.running) return; Q.lock = true; clearInterval(Q.timer);
-  const k = Q.kind;
-  if (k !== 'w') { const q = k === 'g' ? G[Q.i] : RD[Q.i], ok = v === q.ans; Q.ans.push(v);
-    document.querySelectorAll(k === 'g' ? '#gBox .gopt' : '#rBox .ropt').forEach((b, j) => { b.disabled = true; if (j === q.ans) b.classList.add('ok'); else if (j === v) b.classList.add('no'); });
+  const it = Q.items[Q.i], k = it.k, i = it.i, box = $(Q.box);
+  Q.ans.push(v);
+  if (k !== 'w') { const q = k === 'g' ? G[i] : RD[rdIdx(i)], ok = v === q.ans;
+    box.querySelectorAll(k === 'g' ? '.gopt' : '.ropt').forEach((b, j) => { b.disabled = true; if (j === q.ans) b.classList.add('ok'); else if (j === v) b.classList.add('no'); });
     flash(timeout ? '⏰ 시간 초과' : ok ? '⭕ 정답!' : '❌ 오답', timeout ? 't' : ok ? 'g' : 'r');
-  } else { const q = W[Q.i], n = q.ans.filter((acc, b) => acc.some(a => norm(a) === norm(v[b] || ''))).length; Q.ans.push(v);
+  } else { const q = W[i], n = wHits(q, v);
+    box.querySelectorAll('.wfields input, #wSubmit').forEach(x => x.disabled = true);
     flash(timeout ? `⏰ 시간 초과 · ${n}/${q.ans.length}` : n === q.ans.length ? '⭕ 모두 정답!' : `${n}/${q.ans.length} 정답`, timeout ? 't' : n === q.ans.length ? 'g' : 'r');
   }
-  setTimeout(() => { if (!Q.running) return; Q.i++; if (Q.i < (k === 'g' ? G.length : k === 'r' ? RD.length : W.length)) quizQ(); else quizFinish(); }, k === 'r' ? 1300 : 950);
+  if (Q.mode === 'round') {
+    Q.running = false;
+    rnd[i] = Object.assign({}, rnd[i] || {}, { [k]: k === 'w' ? (v || []).map(x => String(x).slice(0, 60)) : v });
+    store.set('rnd', rnd); saveTime();
+    setTimeout(() => { if (Q.mode === 'round' && !$('rqBox').hidden) rqFeedback(i, k, v); }, 800);
+    return;
+  }
+  setTimeout(() => { if (!Q.running) return; Q.i++; if (Q.i < Q.items.length) quizQ(); else quizFinish(); }, k === 'r' ? 1300 : 950);
 }
 function quizFinish() {
-  const k = Q.kind; Q.running = false;
-  const d = ymd(new Date());
-  let a;
-  if (k === 'g') { const w = []; Q.ans.forEach((v, i) => { if (v !== G[i].ans) w.push(i); });
-    a = { d, s: G.length - w.length, n: G.length, w, a: Q.ans, to: Q.to };
-    gRes = G.map((q, i) => Q.ans[i] === q.ans); store.set('gRes', gRes); store.set('gScore', a.s);
-  } else if (k === 'r') { const w = []; Q.ans.forEach((v, i) => { if (v !== RD[i].ans) w.push(i); });
-    a = { d, s: RD.length - w.length, n: RD.length, w, a: Q.ans, to: Q.to };
-    rRes = D.map((_, si) => { const i = RD.findIndex(q => q.sid === si); return i < 0 ? null : Q.ans[i] === RD[i].ans; }); store.set('rRes', rRes);
-  } else { const w = []; let tot = 0;
-    W.forEach((q, i) => q.ans.forEach((acc, b) => { tot++; if (!acc.some(x => norm(x) === norm((Q.ans[i] || [])[b] || ''))) w.push(i + '-' + b); }));
-    a = { d, s: tot - w.length, n: tot, w, a: Q.ans, to: Q.to };
-    wRes = W.map((q, i) => { const bad = q.ans.filter((_, b) => w.includes(i + '-' + b)).length; return bad === 0 ? 'ok' : bad < q.ans.length ? 'part' : 'no'; });
-    store.set('wRes', wRes); store.set('wScore', `${a.s} / ${tot}`);
-  }
-  a.p = a.s / a.n >= CUT;
-  const before = allDone(), firstPass = a.p && !attList(k).some(x => x.p);
-  attList(k).push(a); store.set(k + 'Att', attList(k));
-  reviewed[k] = new Set(); saveTime();
-  renderQuiz(k); renderSteps(); window.scrollTo(0, 0);
-  if (a.p) {
-    const pc = a.s / a.n;
+  Q.running = false;
+  const d = ymd(new Date()), ga = G.map(() => null), wa = W.map(() => []), ra = RD.map(() => null);
+  Q.items.forEach((it, n) => { const v = Q.ans[n]; if (it.k === 'g') ga[it.i] = v === undefined ? null : v; else if (it.k === 'w') wa[it.i] = (v || []).map(x => String(x).slice(0, 60)); else ra[rdIdx(it.i)] = v === undefined ? null : v; });
+  const gw = [], ww = [], rw = []; let wt = 0;
+  G.forEach((q, i) => { if (ga[i] !== q.ans) gw.push(i); });
+  RD.forEach((q, j) => { if (ra[j] !== q.ans) rw.push(j); });
+  W.forEach((q, i) => q.ans.forEach((acc, b) => { wt++; if (!acc.some(x => norm(x) === norm(wa[i][b] || ''))) ww.push(i + '-' + b); }));
+  const gs = G.length - gw.length, rs = RD.length - rw.length, ws = wt - ww.length, s = gs + ws + rs, n = G.length + wt + RD.length, p = s / n >= CUT;
+  const before = allDone();
+  gAtt.push({ d, s: gs, n: G.length, w: gw, a: ga, to: Q.tok.g, p });
+  wAtt.push({ d, s: ws, n: wt, w: ww, a: wa, to: Q.tok.w, p });
+  rAtt.push({ d, s: rs, n: RD.length, w: rw, a: ra, to: Q.tok.r, p });
+  fAtt.push({ d, s, n, p, to: Q.to, gs, gn: G.length, ws, wn: wt, rs, rn: RD.length });
+  gRes = G.map((q, i) => ga[i] === q.ans);
+  wRes = W.map((q, i) => { const bad = q.ans.filter((_, b) => ww.includes(i + '-' + b)).length; return bad === 0 ? 'ok' : bad < q.ans.length ? 'part' : 'no'; });
+  rRes = D.map((_, si) => { const j = rdIdx(si); return j < 0 ? null : ra[j] === RD[j].ans; });
+  store.set('gAtt', gAtt); store.set('wAtt', wAtt); store.set('rAtt', rAtt); store.set('fAtt', fAtt);
+  store.set('gRes', gRes); store.set('wRes', wRes); store.set('rRes', rRes); store.set('gScore', gs); store.set('wScore', `${ws} / ${wt}`);
+  reviewed.g = new Set(); reviewed.w = new Set(); reviewed.r = new Set(); saveTime();
+  renderFinal(); renderSteps(); window.scrollTo(0, 0);
+  if (p) {
     if (allDone() && !before) { confetti(3); setTimeout(() => defeatCinema(() => { goTab('done'); setTimeout(() => maybeCutscene(U.ch), 500); }), 900); }
-    else { confetti(pc >= 1 ? 3 : 2);
-      if (firstPass && k !== 'r') setTimeout(() => modal(pc >= 1 ? '💯' : '🎯', pc >= 1 ? '만점 통과!' : (k === 'g' ? '문법 통과!' : '서술형 통과!'), `${a.s}/${a.n} 정답 · ${'★'.repeat(stars(pc))}<br>다음은 <b>${k === 'g' ? '서술형' : '독해'}</b>! 문항당 30초예요.`, (k === 'g' ? '서술형' : '독해') + ' 도전하기 →', () => goTab(k === 'g' ? 'write' : 'read'), '결과 다시 보기'), 900);
-      else toast(`${pc >= 1 ? '💯 만점!' : `🎉 통과! ${a.s}/${a.n}`} ⚔ ${monOf(U).name} -25`); }
+    else { confetti(s === n ? 3 : 2); toast(`${s === n ? '💯 만점!' : `🎉 통과! ${s}/${n}`}`); }
   } else toast('아쉬워요! 오답 해설을 확인하고 재시험에 도전하세요 💪');
+}
+function finalWrong() {
+  const la = { g: lastAtt('g'), w: lastAtt('w'), r: lastAtt('r') }, out = [];
+  SUB.forEach(k => { if (la[k]) wrongKeys(k, la[k]).forEach(x => out.push([k, String(x)])); });
+  return out;
+}
+function renderFinal() {
+  const box = $('fBox'), la = fAtt.length ? fAtt[fAtt.length - 1] : null, passed = fDone();
+  const nW = W.reduce((t, q) => t + q.ans.length, 0), total = G.length + RD.length + nW, need = Math.ceil(total * CUT);
+  const needRev = la && !la.p ? new Set(finalWrong().filter(([k, x]) => !reviewed[k].has(x)).map(([k, x]) => k + ':' + (k === 'w' ? x.split('-')[0] : x))).size : 0;
+  const nextBtn = passed ? `<button class="big go" id="fNext">완료 화면으로 →</button>` : '';
+  const startLabel = !la ? '최종 복습 시작 (3·2·1)' : la.p ? '다시 풀어보기 (선택)' : needRev ? `오답 해설 ${needRev}개를 확인하면 재시험이 열려요` : '재시험 시작 (3·2·1)';
+  const startBtn = id => `<button class="big${passed ? ' pause' : ''}" id="${id}" ${needRev ? 'disabled' : ''} style="margin-top:10px">${startLabel}</button>`;
+  let html = '';
+  if (la) {
+    html += `<div class="qcard res"><div class="stars">${starStr(stars(la.s / la.n))}</div><div class="pct">${la.s}<small>/ ${la.n}</small></div>`
+      + `<div class="verdict ${la.p ? 'p' : 'f'}">${la.p ? '통과! 🎉' : '재시험 필요'}</div><div class="cut">${fAtt.length}회차 · 문법 ${la.gs}/${la.gn} · 서술형 ${la.ws}/${la.wn} · 독해 ${la.rs}/${la.rn}<br>통과 기준 ${need}/${total} (60%)${la.to ? ` · 시간 초과 ${la.to}` : ''}</div></div>`;
+    html += nextBtn + startBtn('fStart');
+    const g = lastAtt('g'), w = lastAtt('w'), r = lastAtt('r'), gate = !la.p;
+    html += D.map((s, i) => `<div class="sgh">${s.n}번 문장</div>` + rvItem('g', i, g, gate) + rvItem('w', i, w, gate) + (rdIdx(i) >= 0 ? rvItem('r', rdIdx(i), r, gate) : '')).join('');
+    if (!la.p) html += startBtn('fStart2');
+  } else {
+    html += `<div class="qcard"><h3>최종 복습 · 마지막 일격 ⚔</h3>${passed ? '<p style="font-size:13px;color:#15803d;margin-bottom:6px">이전 방식의 시험으로 이미 통과했어요. 복습 삼아 풀어 봐도 좋아요.</p>' : ''}<ul class="rules">`
+      + `<li><span>🔀</span><span style="flex:1;text-align:left">5문장의 <b>문법 5 · 서술형 5 · 독해 5</b>문항을 섞어서 출제</span></li>`
+      + `<li><span>⏱</span><span style="flex:1;text-align:left">문법 <b>${G_SEC}초</b> · 서술형·독해 <b>${W_SEC}초</b> — 시간이 끝나면 자동으로 넘어가요</span></li>`
+      + `<li><span>🎯</span><span style="flex:1;text-align:left">전체 <b>${need}/${total}점(60%) 이상</b>이면 통과 · 서술형은 빈칸마다 1점</span></li>`
+      + `<li><span>🔁</span><span style="flex:1;text-align:left">60% 미만이면 오답 해설을 확인한 뒤 재시험</span></li></ul></div>` + nextBtn + startBtn('fStart');
+  }
+  if (fAtt.length) html += `<div class="hist">` + fAtt.map((a, i) => `<div class="hrow"><span>${i + 1}회차 · ${a.d.slice(5).replace('-', '/')}</span><b>${a.s}/${a.n}</b><span class="tag2 ${a.p ? 'tg-p' : 'tg-f'}">${a.p ? '통과' : '재시험'}</span></div>`).reverse().join('') + `</div>`;
+  box.innerHTML = html;
+  box.querySelectorAll('#fStart,#fStart2').forEach(b => b.onclick = finalStart);
+  const nb = $('fNext'); if (nb) nb.onclick = () => goTab('done');
+  box.querySelectorAll('.ck').forEach(b => b.onclick = () => { b.dataset.k.split(',').forEach(x => reviewed[b.dataset.q].add(x)); const y = scrollY; renderFinal(); window.scrollTo(0, y); });
 }
 
 // ---------- 완료 · 기록 ----------
@@ -966,16 +1072,14 @@ function renderDone() {
   if (allDone()) {
     const st = stars(bg.s / bg.n) + stars(bw.s / bw.n) + stars(br.s / br.n) + 3;
     $('dTop').innerHTML = `<div class="trophy">${monOf(U).img ? `<img src="${monOf(U).img}" alt="" style="width:100%;max-height:170px;object-fit:cover;object-position:${monOf(U).pos || '50% 30%'};border-radius:12px;filter:grayscale(.6) brightness(.8);margin-bottom:6px">` : `<div class="ic">${monOf(U).ic}</div>`}<h2>${monOf(U).name} 격퇴!</h2><p>UNIT ${U.no} · ${U.title}</p>${chapterDone(U.ch) ? `<p style="margin-top:6px;color:#fde68a;font-weight:700">${chapOf(U.ch).sic} 봉인석 [${chapOf(U.ch).stone}] 획득!</p>` : ''}<div class="stars" style="font-size:26px;margin-top:6px;color:#fde68a">${'★'.repeat(st)}<span style="opacity:.3">${'★'.repeat(12 - st)}</span></div>`
-      + `<div class="sum3"><div><b>5/5</b>듣기</div><div><b>${bg.s}/${bg.n}</b>문법 최고</div><div><b>${bw.s}/${bw.n}</b>서술형 최고</div><div><b>${br.s}/${br.n}</b>독해 최고</div></div></div>`
+      + `<div class="sum3"><div><b>5/5</b>라운드</div><div><b>${bg.s}/${bg.n}</b>문법 최고</div><div><b>${bw.s}/${bw.n}</b>서술형 최고</div><div><b>${br.s}/${br.n}</b>독해 최고</div></div></div>`
       + `<button class="big" id="dToc" style="margin-top:12px">목차로 돌아가기</button>`;
     $('dToc').onclick = () => openToc();
   } else {
     const it = (t, label, ok, meta) => `<button class="${ok ? 'd' : ''}" data-t="${t}"><span>${ok ? '✅' : stepState(t) === 'lock' ? '🔒' : '⬜'}</span>${label}<span class="m">${meta}</span></button>`;
     $('dTop').innerHTML = `<div class="qcard"><h3>완료까지 남은 단계</h3><div class="todo">`
-      + it('listen', '듣기 5문장 × 2회', lDone(), `${lPassN()}/5`)
-      + it('gram', '문법 60% 이상', gDone(), bg ? `최고 ${bg.s}/${bg.n}` : '미응시')
-      + it('write', '서술형 60% 이상', wDone(), bw ? `최고 ${bw.s}/${bw.n}` : '미응시')
-      + it('read', '독해 60% 이상', rDone(), br ? `최고 ${br.s}/${br.n}` : '미응시') + `</div></div>`;
+      + it('listen', '문장 라운드 5개 (듣기 2회 · 문법 · 서술형 · 독해)', roundsDone(), `${rDoneN()}/5`)
+      + it('final', '최종 복습 60% 이상', fDone(), fAtt.length ? `최고 ${fAtt.reduce((m, x) => x.s / x.n > m.s / m.n ? x : m, fAtt[0]).s}/${fAtt[0].n}` : '미응시') + `</div></div>`;
     $('dTop').querySelectorAll('.todo button').forEach(b => b.onclick = () => { const t = b.dataset.t; if (stepState(t) === 'lock') toast('🔒 ' + LOCK_MSG[t]); else goTab(t); });
   }
   const today = ymd(new Date());
@@ -999,7 +1103,11 @@ function badge(label, v) {
 // ---------- 세계관: 몬스터 · 봉인석 · 컷신 ----------
 const chapOf = ch => WORLD.chapters[+ch - 1];
 const monOf = u => (chapOf(u.ch).mons[+u.no - 1]) || { name: '수수께끼의 몬스터', en: '', ic: '👾', line: '', win: '' };
-function monHP() { return 100 - lPassN() * 5 - (gDone() ? 25 : 0) - (wDone() ? 25 : 0) - (rDone() ? 25 : 0); }
+function monHP() {   // 라운드마다 15 (듣기 3 + 문항 4×3) · 최종 복습 통과 25
+  if (allDone()) return 0;
+  let dmg = 0; D.forEach((_, i) => { if ((heard[i] || 0) >= NEED) dmg += 3; SUB.forEach(k => { if (k in (rnd[i] || {})) dmg += 4; }); });
+  return Math.max(0, 100 - dmg - (fDone() ? 25 : 0));
+}
 let lastHP = null, lastHPUnit = null;
 function renderMonster() {
   const m = monOf(U), hp = monHP(), c = chapOf(U.ch);
@@ -1154,7 +1262,7 @@ function encounter(done) {
   if (seen.includes(key)) { done && done(); return; }
   let sc;
   if (m.intro && m.intro.length) sc = m.intro.map(x => Object.assign({ img: m.img, bgc: '#0b1410' }, x, { fx: x.fx || ['mist'] }));
-  else sc = [{ img: m.img || '', bgc: 'radial-gradient(circle at 50% 30%,#3a1414,#050f16 70%)', fx: ['mist', 'embers'], icon: m.img ? '' : m.ic, shake: true, tag: `${c.sea} · UNIT ${U.no}`, t: `${m.name} 출현!`, who: '', p: `<i>"${m.line || `${c.sea}에 발을 들인 자여, 각오는 되었느냐!`}"</i><br><span style="font-size:13px;opacity:.8">문장 5개를 들으며 약점을 파악하고, 문법·서술형·독해로 공격하세요!</span>`, btn: '전투 시작 ⚔' }];
+  else sc = [{ img: m.img || '', bgc: 'radial-gradient(circle at 50% 30%,#3a1414,#050f16 70%)', fx: ['mist', 'embers'], icon: m.img ? '' : m.ic, shake: true, tag: `${c.sea} · UNIT ${U.no}`, t: `${m.name} 출현!`, who: '', p: `<i>"${m.line || `${c.sea}에 발을 들인 자여, 각오는 되었느냐!`}"</i><br><span style="font-size:13px;opacity:.8">한 문장씩 듣고 문법·서술형·독해로 공격한 뒤, 최종 복습으로 마지막 일격을 날리세요!</span>`, btn: '전투 시작 ⚔' }];
   cinema(sc, () => { store.set('cuts', store.get('cuts', []).concat(key)); done && done(); });
 }
 function defeatCinema(done) {
@@ -1162,7 +1270,7 @@ function defeatCinema(done) {
   const sc = [
     { img: m.img || '', kb: 'kb2', bgc: 'radial-gradient(circle at 50% 30%,#3a1414,#050f16 70%)', fx: ['embers', 'stars'], icon: m.img ? '' : m.ic, shake: true, flash: true, who: m.name, whoC: 'mon', p: `"${m.win || '크윽… 이렇게 당하다니…!'}"` },
     { img: m.img || '', kb: 'kb3', holo: !!m.img, bgc: 'radial-gradient(circle at 50% 30%,#3b2f0b,#050f16 70%)', fx: ['seal', 'embers'], icon: m.img ? '' : '🏆', tag: `VICTORY · UNIT ${U.no}`, t: `${m.name} 격퇴!`,
-      p: (m.defeat || `${c.sea}의 ${m.name}이(가) 빛의 조각으로 흩어집니다.`) + `<br><span style="font-size:13px;opacity:.85">${nm ? nm + ' 항해사 · ' : ''}듣기 · 문법 · 서술형 · 독해 모두 통과 · 학습시간 ${fmtMin(tsec)}</span>`, btn: '전리품 확인 →' }];
+      p: (m.defeat || `${c.sea}의 ${m.name}이(가) 빛의 조각으로 흩어집니다.`) + `<br><span style="font-size:13px;opacity:.85">${nm ? nm + ' 항해사 · ' : ''}5개 문장 라운드 · 최종 복습 통과 · 학습시간 ${fmtMin(tsec)}</span>`, btn: '전리품 확인 →' }];
   cinema(sc, done);
 }
 function showChars() {
@@ -1222,16 +1330,17 @@ function setEdition(ed) {
   if (UNITS[UID] && UNITS[UID].ed !== ed) { const f = Object.values(UNITS).find(u => u.ed === ed); if (f) setUnit(f.id); }
 }
 function unitStat(id) {
-  const h = store.getU(id, 'heard', [0,0,0,0,0]), ga = store.getU(id, 'gAtt', []), wa = store.getU(id, 'wAtt', []), ra = store.getU(id, 'rAtt', []);
+  const u = UNITS[id], h = store.getU(id, 'heard', [0,0,0,0,0]), ga = store.getU(id, 'gAtt', []), wa = store.getU(id, 'wAtt', []), ra = store.getU(id, 'rAtt', []), fa = store.getU(id, 'fAtt', []);
+  const r = rndFrom(u, ga, wa, ra, store.getU(id, 'rnd', null));
+  const rd = u.D.filter((_, i) => (h[i] || 0) >= NEED && SUB.every(k => k in (r[i] || {}))).length;
   const lp = h.filter(x => x >= NEED).length, gp = ga.some(a => a.p), wp = wa.some(a => a.p), rp = ra.some(a => a.p);
-  return { lp, gp, wp, rp, ga: ga.length, wa: wa.length, ra: ra.length, done: lp === 5 && gp && wp && rp };
+  return { lp, rd, gp, wp, rp, fp: gp && wp && rp, fa: fa.length || Math.max(ga.length, wa.length, ra.length), done: lp === 5 && gp && wp && rp };
 }
 function unitStatus(u) {
   if (!u.ready) return '<span class="soon">준비 중</span>';
   const x = unitStat(u.id);
-  if (x.done) return '<span class="bd b1">🏆 완료</span><span class="bd b1">듣기 ✓</span><span class="bd b1">문법 ✓</span><span class="bd b1">서술형 ✓</span><span class="bd b1">독해 ✓</span>';
-  const t = (ok, n, l) => `<span class="bd ${ok ? 'b1' : n ? 'b2' : 'b0'}">${l} ${ok ? '✓' : n ? '재시험' : '-'}</span>`;
-  return `<span class="bd ${x.lp === 5 ? 'b1' : x.lp ? 'b3' : 'b0'}">듣기 ${x.lp}/5</span>` + t(x.gp, x.ga, '문법') + t(x.wp, x.wa, '서술형') + t(x.rp, x.ra, '독해');
+  if (x.done) return '<span class="bd b1">🏆 완료</span><span class="bd b1">라운드 5/5</span><span class="bd b1">최종 복습 ✓</span>';
+  return `<span class="bd ${x.rd === 5 ? 'b1' : x.rd || x.lp ? 'b3' : 'b0'}">라운드 ${x.rd}/5</span><span class="bd ${x.fp ? 'b1' : x.fa ? 'b2' : 'b0'}">최종 복습 ${x.fp ? '✓' : x.fa ? '재시험' : '-'}</span>`;
 }
 let openCh = store.get('openCh', ['01']);
 function renderHome() {
@@ -1307,7 +1416,7 @@ function errText(e) {
 function say(id, t, ok) { const el = $(id); el.textContent = t || ''; el.className = 'msg' + (t ? (ok ? ' ok' : ' err') : ''); }
 
 // ---- progress sync (student) ----
-const SYNC_KEYS = ['heard','daily','gRes','wRes','gScore','wScore','gAtt','wAtt','time','tday','rAtt','rRes'];
+const SYNC_KEYS = ['heard','daily','gRes','wRes','gScore','wScore','gAtt','wAtt','time','tday','rAtt','rRes','rnd','fAtt'];
 let syncTimer = null, syncReady = false;
 const _rawSet = store.set.bind(store);
 store.set = (k, v) => { _rawSet(k, v); if (syncReady && SYNC_KEYS.includes(k)) queueSync(); };
@@ -1327,7 +1436,8 @@ function mergeUnit(d) {   // runs with UID set to the row's unit (withUnit)
   _rawSet('daily', ld);
   if (d.tday) { const lt = store.get('tday', {}) || {}; Object.keys(d.tday).forEach(k => { lt[k] = Math.max(lt[k] || 0, d.tday[k]); }); _rawSet('tday', lt); }
   _rawSet('time', Math.max(store.get('time', 0) || 0, d.time || 0));
-  ['gAtt','wAtt','rAtt'].forEach(k => { const la = store.get(k, []) || []; if (Array.isArray(d[k]) && d[k].length >= la.length) _rawSet(k, d[k]); });
+  if (Array.isArray(d.rnd)) { const lr = store.get('rnd', null); _rawSet('rnd', d.rnd.map((x, i) => Object.assign({}, x || {}, (Array.isArray(lr) && lr[i]) || {}))); }
+  ['gAtt','wAtt','rAtt','fAtt'].forEach(k => { const la = store.get(k, []) || []; if (Array.isArray(d[k]) && d[k].length >= la.length) _rawSet(k, d[k]); });
   ['gRes','wRes','rRes','gScore','wScore'].forEach(k => { if (d[k] !== undefined && d[k] !== null) _rawSet(k, d[k]); });
 }
 async function pullProgress(sid) {
@@ -1485,7 +1595,7 @@ function renderReq() {
 }
 function summarize(p) {
   const d = (p && p.data) || {}, h = d.heard || [], dl = d.daily || {}, td = d.tday || {};
-  const gA = d.gAtt || [], wA = d.wAtt || [], rA = d.rAtt || [];
+  const gA = d.gAtt || [], wA = d.wAtt || [], rA = d.rAtt || [], fA = d.fAtt || [], rn = Array.isArray(d.rnd) ? d.rnd : [];
   const act = Object.assign({}, dl); Object.keys(td).forEach(k => { if (td[k] >= 30) act[k] = (act[k] || 0) + 1; });
   const days = Object.keys(act).filter(k => act[k] > 0).sort();
   let streak = 0; const dt = new Date(); const ymd2 = x => x.getFullYear() + '-' + String(x.getMonth()+1).padStart(2,'0') + '-' + String(x.getDate()).padStart(2,'0');
@@ -1493,7 +1603,7 @@ function summarize(p) {
   const best = a => a.length ? a.reduce((m, x) => x.s / x.n > m.s / m.n ? x : m, a[0]) : null;
   const passAt = a => { const i = a.findIndex(x => x.p); return i < 0 ? 0 : i + 1; };
   return { heard: h, pass2: h.filter(x => x >= 2).length, listens: h.reduce((a, b) => a + (b || 0), 0),
-    gA, wA, rA, gBest: best(gA), wBest: best(wA), rBest: best(rA), gPassAt: passAt(gA), wPassAt: passAt(wA), rPassAt: passAt(rA),
+    fA, rn, gA, wA, rA, gBest: best(gA), wBest: best(wA), rBest: best(rA), gPassAt: passAt(gA), wPassAt: passAt(wA), rPassAt: passAt(rA),
     time: d.time || 0, days: days.length, streak, first: days[0] || null, last: p ? p.updated_at : null };
 }
 const mins = s => { const m = Math.round((s || 0) / 60); return m >= 60 ? `${Math.floor(m / 60)}시간 ${m % 60}분` : `${m}분`; };
@@ -1512,7 +1622,7 @@ function renderProg() {
     const p = AD.progress.find(x => x.student_id === s.id && x.unit_id === UNIT), m = summarize(p);
     const done = m.pass2 === 5 && m.gPassAt && m.wPassAt && m.rPassAt;
     return `<tr><td class="n"><b>${esc(s.name)}${done ? ' 🏆' : ''}</b><span>${esc(s.last4)}</span><button class="mini ok" data-rep="${s.id}" style="margin-top:4px;padding:3px 8px;font-size:11.5px">리포트</button></td>`
-      + `<td><span class="pill2 ${m.pass2 === 5 ? 'p1' : m.pass2 ? 'p2' : 'p0'}">${m.pass2}/5</span><span style="display:block;font-size:11px;color:var(--mute)">${m.listens}회</span></td>`
+      + `<td><span class="pill2 ${m.pass2 === 5 ? 'p1' : m.pass2 ? 'p2' : 'p0'}">${m.pass2}/5</span><span style="display:block;font-size:11px;color:var(--mute);white-space:nowrap">${m.listens}회 · 라운드 ${roundsN(m, UU)}/5</span></td>`
       + `<td>${testCell(m.gA, m.gBest, m.gPassAt)}</td><td>${testCell(m.wA, m.wBest, m.wPassAt)}</td><td>${testCell(m.rA, m.rBest, m.rPassAt)}</td>`
       + `<td><b style="font-size:12.5px">${mins(m.time)}</b><span style="display:block;font-size:11px;color:var(--mute)">${m.days}일 · ${fmt(m.last)}</span></td>`
       + `</tr>`;
@@ -1521,7 +1631,7 @@ function renderProg() {
   $('ad-prog').innerHTML = `<div class="acard"><h3>학습 현황 · ${clsEd === 'compass' ? '기본' : '심화'} Ch${UU.ch} U${UU.no} <small>${studs.length}명</small></h3>`
     + (AD.classes.length ? `<div class="row2"><select id="adCls">${opts}</select></div><div class="row2"><select id="adUnit">${uopts}</select></div>` : '<div class="empty">담당 반이 없어요.</div>')
     + (studs.length ? `<div class="scroll"><table class="tbl"><tr><th>학생</th><th>듣기</th><th>문법</th><th>서술형</th><th>독해</th><th>학습시간</th></tr>${rows}</table></div>` : '<div class="empty">승인된 학생이 없어요.</div>')
-    + `<div class="hint" style="margin-top:8px;font-size:11.5px;color:var(--mute)">듣기: 2회 이상 들은 문장/5 · 문법·서술형·독해: 최고 점수 (60% 이상 통과) · 🏆 유닛 완료 · <b>리포트</b>를 누르면 학부모 리포트용 총평이 만들어져요</div></div>`;
+    + `<div class="hint" style="margin-top:8px;font-size:11.5px;color:var(--mute)">듣기: 2회 이상 들은 문장/5 · 문법·서술형·독해: 최종 복습 영역별 최고 점수 (전체 60% 이상이면 통과) · 🏆 유닛 완료 · <b>리포트</b>를 누르면 학부모 리포트용 총평이 만들어져요</div></div>`;
   const sel = $('adCls'); if (sel) sel.onchange = () => { AD.cls = sel.value; renderProg(); };
   const usel = $('adUnit'); if (usel) usel.onchange = () => { AD.unit = usel.value; renderProg(); };
   $('ad-prog').querySelectorAll('[data-rep]').forEach(b => b.onclick = () => {
@@ -1544,27 +1654,45 @@ function lastWrong(kind, att, UU) {
   (la.w || []).forEach(x => { if (kind === 'g') out.add(G[+x].point); else if (kind === 'r') out.add(RD[+x].point); else { const [i, b] = String(x).split('-').map(Number); out.add(W[i].points[b]); } });
   return [...out];
 }
+function roundsOf(m, UU) { return rndFrom(UU, m.gA, m.wA, m.rA, m.rn.length === UU.D.length ? m.rn : null); }
+function roundsN(m, UU) { const r = roundsOf(m, UU); return UU.D.filter((_, i) => (m.heard[i] || 0) >= 2 && ['g', 'w', 'r'].every(k => k in (r[i] || {}))).length; }
+function roundFirst(m, UU) {
+  if (m.rn.length !== UU.D.length) return '';
+  const nm = t => String(t).toLowerCase().replace(/[’']/g, "'").replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
+  let g = [0, 0], w = [0, 0], r = [0, 0];
+  m.rn.forEach((x, i) => { if (!x) return;
+    if ('g' in x) { g[1]++; if (x.g === UU.G[i].ans) g[0]++; }
+    if ('w' in x) UU.W[i].ans.forEach((acc, b) => { w[1]++; if (acc.some(a => nm(a) === nm((x.w || [])[b] || ''))) w[0]++; });
+    if ('r' in x) { const j = UU.RD.findIndex(q => q.sid === i); r[1]++; if (j >= 0 && x.r === UU.RD[j].ans) r[0]++; } });
+  if (!g[1] && !w[1] && !r[1]) return '';
+  const pc = a => a[1] ? Math.round(a[0] / a[1] * 100) : 0, all = [g[0] + w[0] + r[0], g[1] + w[1] + r[1]];
+  let t = `한 문장씩 듣고 바로 푼 첫 풀이 결과: 문법 ${g[0]}/${g[1]}, 서술형 빈칸 ${w[0]}/${w[1]}, 독해 ${r[0]}/${r[1]} (전체 ${pc(all)}%). `;
+  t += pc(all) >= 80 ? '문장을 들은 직후 구조를 정확히 적용하고 있습니다.' : pc(all) >= 60 ? '대부분의 구조를 바로 적용했으며, 틀린 문항은 해설을 통해 보완했습니다.' : '들은 직후에도 헷갈리는 구조가 있어, 해설 확인과 반복 청취가 더 필요합니다.';
+  return t;
+}
 function makeReport(s, m, UU) {
   const name = s.name, L = [];
   const unitT = `Ch${UU.ch} Unit ${UU.no} '${UU.title}'`;
-  if (!m.listens && !m.gA.length && !m.wA.length && !m.rA.length) return `[${name} 학생 · ${unitT}]\n\n아직 이 유닛의 학습 기록이 없습니다. 학습 시작을 독려해 주세요.`;
+  if (!m.listens && !m.gA.length && !m.wA.length && !m.rA.length && !m.rn.some(x => x && Object.keys(x).length)) return `[${name} 학생 · ${unitT}]\n\n아직 이 유닛의 학습 기록이 없습니다. 학습 시작을 독려해 주세요.`;
   const done = m.pass2 === 5 && m.gPassAt && m.wPassAt && m.rPassAt;
   L.push(`[${name} 학생 · ${unitT}]`);
   L.push('');
-  L.push(`■ 학습 개요\n총 학습시간 ${mins(m.time)}, 학습일 ${m.days}일${m.streak >= 2 ? `(최근 ${m.streak}일 연속)` : ''}. ` + (done ? '듣기·문법·서술형·독해 4단계를 모두 통과하여 유닛을 완료했습니다.' : `현재 ${[m.pass2 === 5 ? null : '듣기', m.gPassAt ? null : '문법', m.wPassAt ? null : '서술형', m.rPassAt ? null : '독해'].filter(Boolean).join('·')} 단계가 남아 있습니다.`));
+  L.push(`■ 학습 개요\n총 학습시간 ${mins(m.time)}, 학습일 ${m.days}일${m.streak >= 2 ? `(최근 ${m.streak}일 연속)` : ''}. ` + (done ? '5개 문장 라운드(듣기→문법→서술형→독해)와 최종 복습을 모두 통과하여 유닛을 완료했습니다.' : `현재 ${roundsN(m, UU) < 5 ? `문장 라운드 ${roundsN(m, UU)}/5 진행 중이며 ` : ''}최종 복습이 남아 있습니다.`));
   // 듣기
   let ls;
   if (m.pass2 === 5) ls = m.listens >= 20 ? `5문장을 모두 반복 청취(총 ${m.listens}회)하며 기준(문장당 2회)을 크게 넘겨 매우 성실하게 학습했습니다.` : m.listens >= 13 ? `5문장을 모두 기준 이상 반복 청취(총 ${m.listens}회)하여 성실하게 학습했습니다.` : `5문장을 모두 기준(문장당 2회)에 맞춰 청취했습니다(총 ${m.listens}회).`;
   else ls = m.listens ? `5문장 중 ${m.pass2}문장을 기준(2회 이상)까지 들었습니다(총 ${m.listens}회). 남은 문장의 반복 청취가 필요합니다.` : '아직 듣기를 시작하지 않았습니다.';
   L.push(`\n■ 듣기\n${ls}`);
+  const rf = roundFirst(m, UU);
+  if (rf) L.push(`\n■ 문장 라운드 (첫 풀이)\n${rf}`);
   // 문법 / 서술형
   const test = (kind, label, a, best, passAt) => {
     if (!a.length) return `\n■ ${label}\n아직 응시하지 않았습니다.`;
     const f = a[0], pct = x => Math.round(x.s / x.n * 100);
     let t = `${a.length}회 응시, 최고 ${best.s}/${best.n}(${pct(best)}%). `;
-    if (passAt === 1) t += f.s === f.n ? '첫 시도에 만점으로 통과하여 개념 이해가 매우 탄탄합니다. ' : `첫 시도에 ${f.s}/${f.n}(${pct(f)}%)로 통과했습니다. `;
+    if (passAt === 1) t += f.s === f.n ? '최종 복습 첫 시도에 이 영역 만점을 받아 개념 이해가 매우 탄탄합니다. ' : `최종 복습 첫 시도에서 이 영역 ${f.s}/${f.n}(${pct(f)}%)을 받으며 유닛을 통과했습니다. `;
     else if (passAt) t += `1회차 ${f.s}/${f.n}(${pct(f)}%)에서 오답 해설을 확인한 뒤 ${passAt}회차에 통과하여, 틀린 부분을 스스로 바로잡는 모습을 보였습니다. `;
-    else t += `아직 통과 기준(60%)에 도달하지 못해 재시험이 필요합니다. `;
+    else t += `아직 최종 복습 통과 기준(전체 60%)에 도달하지 못해 재시험이 필요합니다. `;
     const to = a.reduce((x, y) => x + (y.to || 0), 0);
     if (to) t += `제한시간 초과가 ${to}회 있어 문제 풀이 속도도 함께 연습하면 좋겠습니다. `;
     const cnt = wrongPoints(kind, a, UU), lw = lastWrong(kind, a, UU), pts = Object.keys(cnt).sort((x, y) => cnt[y] - cnt[x]);
@@ -1575,16 +1703,16 @@ function makeReport(s, m, UU) {
     } else if (best.s === best.n) t += '';
     return `\n■ ${label}\n${t.trim()}`;
   };
-  L.push(test('g', '문법 (어법 선택 · 문항당 15초)', m.gA, m.gBest, m.gPassAt));
-  L.push(test('w', '서술형 (빈칸 완성 · 문항당 30초)', m.wA, m.wBest, m.wPassAt));
-  L.push(test('r', '독해 (요지·제목 5지선다 · 문항당 30초)', m.rA, m.rBest, m.rPassAt));
+  L.push(test('g', '최종 복습 · 문법 (어법 선택 · 문항당 15초)', m.gA, m.gBest, m.gPassAt));
+  L.push(test('w', '최종 복습 · 서술형 (빈칸 완성 · 문항당 30초)', m.wA, m.wBest, m.wPassAt));
+  L.push(test('r', '최종 복습 · 독해 (요지·제목 5지선다 · 문항당 30초)', m.rA, m.rBest, m.rPassAt));
   // 종합
   const gf = m.gA[0], wf = m.wA[0], firstHigh = gf && wf && gf.s / gf.n >= .8 && wf.s / wf.n >= .8;
   let tot;
   if (done && firstHigh && m.gPassAt === 1 && m.wPassAt === 1 && m.rPassAt === 1) tot = `반복 듣기와 문제 풀이 모두 우수합니다. ${UU.topic}을(를) 정확히 이해하고, 문장의 핵심 의미도 정확히 파악하고 있어 다음 유닛으로 자신 있게 넘어가도 좋겠습니다.`;
   else if (done) tot = '모든 단계를 통과하여 유닛 학습을 마쳤습니다. 위에 정리한 보완 포인트를 수업 시간에 한 번 더 짚어 주면 완성도가 더욱 높아질 것입니다.';
   else if (m.pass2 === 5 || m.gA.length) tot = '학습을 꾸준히 진행 중입니다. 남은 단계를 마치도록 격려해 주시면 좋겠습니다.';
-  else tot = '듣기 단계를 진행 중입니다. 문장당 2회 이상 반복해서 듣는 습관을 들이도록 지도하겠습니다.';
+  else tot = '문장 라운드를 진행 중입니다. 문장당 2회 이상 반복해서 듣고 바로 문제를 풀어 보는 습관을 들이도록 지도하겠습니다.';
   L.push(`\n■ 종합 의견\n${tot}`);
   return L.join('\n');
 }
