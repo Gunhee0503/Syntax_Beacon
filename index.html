@@ -508,7 +508,7 @@ h1{font-size:20px;font-weight:900;margin:3px 0 2px}
     <label class="chk"><input type="checkbox" id="lgAgree"><span>위 내용을 확인했고 개인정보 수집·이용에 동의합니다.</span></label>
     <button class="btn" id="lgGo">승인 요청하기</button>
     <div class="msg" id="lgMsg"></div>
-    <button class="lnk" id="lgStaff">선생님·원장님 로그인</button>
+    <button class="lnk" id="lgStaff">선생님·원장님 관리자 (PIF Hub)</button>
   </div>
   <div class="pif"><img src="pif_logo.png" alt="PIF EDUCATION"><div class="q"><b>문의</b><a href="tel:025557229">02-555-7229</a><i>|</i><a href="tel:01095467229">010-9546-7229</a></div></div>
 </div></div>
@@ -1550,6 +1550,10 @@ async function studentStatus() {
   return (data && data[0]) || null;
 }
 async function enterApp(st) {
+  try {   // PIF Hub 반별 수강 설정: 구문의 지도가 열리지 않은 반이면 안내
+    const r = await SB.rpc('vt_my_access'); const a = r.data && r.data[0];
+    if (a && Array.isArray(a.courses) && !a.courses.includes('syntax')) { showNoSyntax(st); return; }
+  } catch (e) {}
   ME = st; setEdition(st.edition || 'beacon'); await pullProgress(st.student_id);
   APP_OK = true; reloadState(); route();
   const who = $('whoami'); if (who) who.textContent = `${st.name} · ${st.class_name}`;
@@ -1596,7 +1600,8 @@ async function studentLogout() {
 }
 
 // ---- staff flow ----
-$('lgStaff').onclick = () => { only('staff'); say('stMsg', ''); };
+const HUB_ADMIN = 'https://pif-hub.vercel.app/admin/';   // 관리자는 PIF Hub 전체 관리자로 이전
+$('lgStaff').onclick = () => { location.href = HUB_ADMIN; };
 $('stBack').onclick = () => only('login');
 $('stLogin').onclick = async () => {
   const email = $('stEmail').value.trim().toLowerCase(), pw = $('stPw').value;
@@ -1626,6 +1631,14 @@ $('stReset').onclick = async () => {
   try { const { error } = await SB.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname + '#admin' }); if (error) throw error;
     say('stMsg', '비밀번호 재설정 메일을 보냈어요.', true); } catch (e) { say('stMsg', errText(e)); }
 };
+function showNoSyntax(st) {
+  only('pending'); clearInterval(window._pd);
+  const w = document.querySelector('#v-pending .wait');
+  w.innerHTML = '<div class="ic">🔒</div><h2>아직 열리지 않은 코스예요</h2><div class="who"></div>'
+    + '<div class="hint" style="margin-top:6px">우리 반에서는 구문의 지도가 열려 있지 않아요.<br>담당 선생님께 문의하거나 PIF Hub에서 다른 코스를 학습하세요.</div>'
+    + '<a class="btn" style="display:block;text-align:center;text-decoration:none" href="https://pif-hub.vercel.app/learn/">PIF Hub로 가기</a>';
+  w.querySelector('.who').textContent = `${st.name} · ${st.class_name}`;
+}
 let RECOVERY = false;
 function showRecovery() {
   only('staff'); RECOVERY = true;
@@ -1858,8 +1871,7 @@ async function boot() {
   try {
     const { data: { session } } = await SB.auth.getSession();
     if (RECOVERY) return;
-    if (session && session.user && !session.user.is_anonymous) { await enterAdmin(); return; }
-    if (location.hash === '#admin') { only('staff'); return; }
+    if ((session && session.user && !session.user.is_anonymous) || location.hash === '#admin') { location.replace(HUB_ADMIN); return; }
     if (session && session.user) {
       const st = await studentStatus();
       if (st && st.status === 'approved') return enterApp(st);
