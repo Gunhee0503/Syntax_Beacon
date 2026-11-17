@@ -1395,7 +1395,10 @@ function showChars() {
   el.innerHTML = `<div class="ct2"><b>👥 등장인물</b><button>닫기 ✕</button></div>` + WORLD.characters.map(c => `<div class="cc"><img src="${c.img}" alt="${c.name}"><div class="cb2"><div class="rl">${c.role}</div><h3>${c.name}<small>${c.en}</small></h3><p>${c.p}</p></div></div>`).join('');
   document.body.appendChild(el); el.querySelector('.ct2 button').onclick = () => el.remove();
 }
-const CH_VIDEO = { '04': { src: 'assets/video/ch04-intro.mp4?v=3', poster: 'assets/video/ch04-intro-poster.jpg' } };
+const CH_VIDEO = {
+  '03': { src: 'assets/video/ch03-intro.mp4?v=1', poster: 'assets/video/ch03-intro-poster.jpg' },
+  '04': { src: 'assets/video/ch04-intro.mp4?v=3', poster: 'assets/video/ch04-intro-poster.jpg' },
+};
 function playIntro(done, vsrc, vposter) {
   const el = document.createElement('div'); el.className = 'ivid';
   el.innerHTML = `<video src="${vsrc || 'assets/video/intro.mp4'}" poster="${vposter || 'assets/video/intro-poster.jpg'}" muted playsinline webkit-playsinline preload="auto"></video><button class="vbtn vmute">🔇 소리 켜기</button><button class="vbtn vskip">건너뛰기 ⏭</button><button class="vbtn vplay">▶ 재생</button><div class="vbar"><i></i></div>`;
