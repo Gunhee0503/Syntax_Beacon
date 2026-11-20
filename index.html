@@ -1526,6 +1526,18 @@ let APP_OK = false, ME = null, STAFF = null;
 const HUB_URL = 'https://pif-hub.vercel.app/learn/';
 const ED_NAME = { compass: 'COMPASS 기본편', beacon: 'BEACON 심화편' }, ED_RO = { compass: '로', beacon: '으로' };
 let WANT_ED = null;
+// 학습 홈에서 #hub=<1회용 토큰> 으로 넘어오면 이 브라우저를 학습 홈과 같은 학생으로 맞춤 (사이트가 달라 로그인이 따로 남기 때문)
+let HUB_TOKEN = null;
+try { const m = location.hash.match(/^#hub=([0-9a-f]{32,80})$/); if (m) { HUB_TOKEN = m[1]; history.replaceState(null, '', location.pathname + location.search); } } catch (e) {}
+async function hubHandoff() {
+  const t = HUB_TOKEN; HUB_TOKEN = null; if (!t) return;
+  try {
+    let { data: { session } } = await SB.auth.getSession();
+    if (session && session.user && !session.user.is_anonymous) { await SB.auth.signOut(); session = null; }
+    if (!session) { const { error } = await SB.auth.signInAnonymously(); if (error) throw error; }
+    const { error } = await SB.rpc('hub_handoff_use', { p_token: t }); if (error) throw error;
+  } catch (e) { console.warn('hub handoff', e); }
+}
 try { const q = new URLSearchParams(location.search).get('ed'); if (q === 'compass' || q === 'beacon') { WANT_ED = q; sessionStorage.setItem('wantEd', q); } else WANT_ED = sessionStorage.getItem('wantEd'); } catch (e) {}
 function edNotice(st) {
   const have = st.edition === 'compass' ? 'compass' : 'beacon', want = WANT_ED;
@@ -1906,6 +1918,7 @@ async function boot() {
   if (!SB) { only('login'); say('lgMsg', '앱을 불러오지 못했어요. 새로고침해 주세요.'); return; }
   SB.auth.onAuthStateChange((ev) => { if (ev === 'PASSWORD_RECOVERY') showRecovery(); });
   try {
+    if (HUB_TOKEN && !RECOVERY) await hubHandoff();
     const { data: { session } } = await SB.auth.getSession();
     if (RECOVERY) return;
     if (session && session.user && !session.user.is_anonymous) { await enterAdmin(); return; }
