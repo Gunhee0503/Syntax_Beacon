@@ -167,6 +167,11 @@ h1{font-size:20px;font-weight:900;margin:3px 0 2px}
 .ur .go{flex:0 0 auto;color:var(--navy);font-weight:900;align-self:center}
 .ur.off{background:#f6f4f0;cursor:default}.ur.off .un{background:#bdb8ae}.ur.off b{color:#9a958c}
 .soon{font-size:11px;color:#9a958c;font-weight:700}
+.bd.bx{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
+.past{margin:2px 0 16px;border:1px dashed #c7d2fe;background:#f8f9ff;border-radius:14px;padding:10px 12px}
+.past .ph{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}.past .ph b{font-size:14px}.past .ph span{font-size:12px;color:#6b7280}
+.past .ur .un{background:#4f46e5}
+.pastbar{background:#eef2ff;color:#3730a3;font-size:12.5px;font-weight:600;padding:8px 12px;border-radius:10px;margin:0 0 10px}
 .chp{border-bottom:1px solid var(--line);padding:4px 0 6px;margin-bottom:6px}
 .chp:last-child{border-bottom:none}
 .chh{position:relative;display:flex;flex-direction:column;gap:1px;width:100%;text-align:left;border:none;background:none;padding:6px 28px 6px 0;cursor:pointer;font:inherit;color:inherit}
@@ -581,7 +586,7 @@ h1{font-size:20px;font-weight:900;margin:3px 0 2px}
 <div id="v-unit" hidden>
 <div class="top"><button class="back" id="toHome">← 목차</button><span class="brand">구문의 지도 · <b class="edB">BEACON</b></span><a class="hubl" href="https://pif-hub.vercel.app/learn/">⌂ PIF 홈</a></div>
 <div class="beam"><i style="background:var(--red)"></i><i style="background:var(--pink)"></i><i style="background:var(--blue)"></i><i style="background:var(--teal)"></i></div>
-<div class="unit"><div class="uhead"><span class="uc" id="uCode">CH 01 · UNIT 01</span><span class="clock" id="clock">⏱ 0분</span></div><h1 id="uTitle"></h1><div class="sub" id="uSub"></div></div>
+<div class="unit"><div class="uhead"><span class="uc" id="uCode">CH 01 · UNIT 01</span><span class="clock" id="clock">⏱ 0분</span></div><h1 id="uTitle"></h1><div class="sub" id="uSub"></div><div class="pastbar" id="pastBar" hidden></div></div>
 <div class="mon" id="mon"><div class="mic" id="monIc"></div><div class="mtx"><div class="mnm"><b id="monNm"></b><span id="monEn"></span></div><div class="mln" id="monLn"></div><div class="hpb"><i id="monHp" style="width:100%"></i></div><div class="hpt"><span id="monHpT">HP 100 / 100</span><span id="monSub"></span></div></div></div>
 <div class="steps" id="steps">
   <button class="stp" data-t="listen"><span class="c">1</span><span class="l">문장 라운드</span></button>
@@ -692,7 +697,7 @@ const rStage = i => (heard[i] || 0) < NEED ? 'listen' : (SUB.find(k => !(k in (r
 const rDoneN = () => D.filter((_, i) => rStage(i) === 'done').length;
 const roundsDone = () => rDoneN() === D.length;
 const firstOpen = () => { const i = D.findIndex((_, j) => rStage(j) !== 'done'); return i < 0 ? 0 : i; };
-const unlocked = i => D.slice(0, i).every((_, j) => rStage(j) === 'done');
+const unlocked = i => twinDone(UID) || D.slice(0, i).every((_, j) => rStage(j) === 'done');
 const stars = pct => pct >= 1 ? 3 : pct >= .8 ? 2 : pct >= CUT ? 1 : 0;
 const starStr = n => '★★★'.split('').map((s, i) => `<i class="${i < n ? 'on' : ''}">★</i>`).join('');
 const fmtMin = s => { const m = Math.floor(s / 60); return m >= 60 ? `${Math.floor(m / 60)}시간 ${m % 60}분` : `${m}분`; };
@@ -1460,14 +1465,25 @@ function unitStat(id) {
 }
 function unitStatus(u) {
   if (!u.ready) return '<span class="soon">준비 중</span>';
-  const x = unitStat(u.id);
+  const x = unitStat(u.id), tw = !isPast(u.id) && twinDone(u.id) ? `<span class="bd bx">${ED_INFO[otherEd()].b}에서 완료 ✓</span>` : '';
   if (x.done) return '<span class="bd b1">🏆 완료</span><span class="bd b1">라운드 5/5</span><span class="bd b1">최종 복습 ✓</span>';
-  return `<span class="bd ${x.rd === 5 ? 'b1' : x.rd || x.lp ? 'b3' : 'b0'}">라운드 ${x.rd}/5</span><span class="bd ${x.fp ? 'b1' : x.fa ? 'b2' : 'b0'}">최종 복습 ${x.fp ? '✓' : x.fa ? '재시험' : '-'}</span>`;
+  return tw + `<span class="bd ${x.rd === 5 ? 'b1' : x.rd || x.lp ? 'b3' : 'b0'}">라운드 ${x.rd}/5</span><span class="bd ${x.fp ? 'b1' : x.fa ? 'b2' : 'b0'}">최종 복습 ${x.fp ? '✓' : x.fa ? '재시험' : '-'}</span>`;
 }
+/* 편을 바꾼 학생(예: BEACON → COMPASS)을 위한 절충
+   - 다른 편에서 공부한 기록은 지워지지 않고 '지난 학습'으로 목차에 남아 언제든 다시 열 수 있음 (기록은 원래 편에 저장)
+   - 같은 Ch·Unit을 다른 편에서 끝냈다면 이번 편 단원에 '○○에서 완료' 배지 + 문장 잠금 없이 원하는 문장부터 학습
+   - 완료 판정은 편마다 따로 (내용이 달라서 그대로 넘겨주지 않음) */
+const otherEd = () => EDITION === 'compass' ? 'beacon' : 'compass';
+function twinId(id) { return id.startsWith('c-') ? id.slice(2) : 'c-' + id; }
+function hasRec(id) { if (!UNITS[id]) return false; const x = unitStat(id); return x.done || x.lp > 0 || x.rd > 0 || x.fa > 0; }
+function twinDone(id) { const t = twinId(id); return !!(UNITS[t] && UNITS[id] && UNITS[t].ed !== UNITS[id].ed && unitStat(t).done); }
+const isPast = id => !!(UNITS[id] && UNITS[id].ed !== EDITION);
+function edLabel() { const past = U && U.ed !== EDITION; document.querySelectorAll('#v-unit .edB').forEach(x => x.textContent = ED_INFO[U.ed].b + (past ? ' · 지난 학습' : ''));
+  const bar = $('pastBar'); if (bar) { bar.hidden = !(past || twinDone(UID)); bar.textContent = past ? `${ED_INFO[U.ed].b}에서 공부했던 단원을 다시 보는 중이에요. 여기서 한 학습은 ${ED_INFO[U.ed].b} 기록에 저장돼요.` : `${ED_INFO[otherEd()].b}에서 이미 끝낸 단원이라, 원하는 문장부터 자유롭게 학습할 수 있어요.`; } }
 let openCh = store.get('openCh', ['01']);
 function renderHome() {
   $('seaMap').innerHTML = seaMapHTML(); $('btnStory').onclick = () => showPrologue(); $('btnChars').onclick = () => showChars(); $('btnVideo').onclick = () => playIntro(); $('btnBag').onclick = () => showBag();
-  $('tocList').innerHTML = TOC.map(c => {
+  $('tocList').innerHTML = pastHTML() + TOC.map(c => {
     const ready = c.units.filter(u => u.ready).length, op = openCh.includes(c.ch);
     return `<div class="chp${op ? ' op' : ''}"><button class="chh" data-ch="${c.ch}"><span class="cn">CHAPTER ${c.ch} · ${chapOf(c.ch).sic} ${chapterDone(c.ch) ? '봉인석 획득' : chapOf(c.ch).sea}<em>${ready ? `${ready}/${c.units.length} Unit 학습 가능` : `${c.units.length} Units · 준비 중`}</em></span><span class="ct">${c.title}</span><span class="ce">${c.en}</span><span class="tg">${op ? '−' : '+'}</span></button>`
       + `<div class="cu">` + (CH_VIDEO[c.ch] ? `<button class="ur vid" data-vid="${c.ch}"><span class="un">▶</span><span class="ut"><b>CHAPTER ${c.ch} 인트로 영상</b><span class="mn2">${chapOf(c.ch).sea} · 다시 보기</span></span></button>` : '') + c.units.map(u => `<button class="ur${u.ready ? '' : ' off'}" ${u.ready ? `data-id="${u.id}"` : 'disabled'}><span class="un">U${u.no}</span><span class="ut"><b>${u.title}</b><span class="mn2${u.ready && unitStat(u.id).done ? ' dead' : ''}">${chapOf(c.ch).mons[+u.no - 1] ? chapOf(c.ch).mons[+u.no - 1].ic + ' ' + chapOf(c.ch).mons[+u.no - 1].name + (u.ready && unitStat(u.id).done ? ' · 격퇴 ✓' : '') : ''}</span><span class="us">${unitStatus(u)}</span></span>${u.ready ? '<span class="go">›</span>' : ''}</button>`).join('') + '</div></div>';
@@ -1479,9 +1495,16 @@ function renderHome() {
     store.set('openCh', openCh); renderHome();
   });
 }
+function pastHTML() {
+  const oe = otherEd(), L = TOCS[oe].flatMap(c => c.units.map(u => Object.assign({ ch: c.ch }, u))).filter(u => u.ready && hasRec(u.id));
+  if (!L.length) return '';
+  const nd = L.filter(u => unitStat(u.id).done).length;
+  return `<div class="past"><div class="ph"><b>📚 지난 학습 · ${ED_INFO[oe].b}</b><span>예전에 공부한 ${L.length}개 단원${nd ? ` (완료 ${nd})` : ''} · 기록은 그대로 남아 있고 언제든 다시 볼 수 있어요</span></div>`
+    + L.map(u => `<button class="ur" data-id="${u.id}"><span class="un">${u.ch}·${u.no}</span><span class="ut"><b>${u.title}</b><span class="us">${unitStatus(u)}</span></span><span class="go">›</span></button>`).join('') + '</div>';
+}
 function showView(v) { only(v); }
 function openUnit(id, tab) {
-  setUnit(id); showView('unit');
+  setUnit(id); showView('unit'); edLabel();
   try { if (location.hash.slice(1).indexOf(UID) !== 0) location.hash = UID; } catch (e) {}
   goTab(tab || 'listen');
   const after = () => { if (!allDone()) setTimeout(() => encounter(), 250); };
@@ -1504,7 +1527,7 @@ $('startBtn').onclick = openToc;
 function route() {
   const h = location.hash.slice(1);
   const mm = h.match(/^((?:c-)?ch\d\d-u\d\d)(?:-(\w+))?$/);
-  if (mm && UNITS[mm[1]] && UNITS[mm[1]].ed === EDITION) { setUnit(mm[1]); showView('unit'); goTab(mm[2] || 'listen'); }
+  if (mm && UNITS[mm[1]] && (UNITS[mm[1]].ed === EDITION || hasRec(mm[1]))) { setUnit(mm[1]); showView('unit'); edLabel(); goTab(mm[2] || 'listen'); }
   else if (h === 'contents') { stopAudio(); quizAbort(); showView('toc'); renderHome(); }
   else { stopAudio(); quizAbort(); showView('home'); }
 }
