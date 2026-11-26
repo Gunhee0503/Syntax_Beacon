@@ -394,9 +394,11 @@ h1{font-size:20px;font-weight:900;margin:3px 0 2px}
 .rq-t{display:inline-block;font-size:12px;font-weight:900;color:#fff;background:var(--red);border-radius:6px;padding:2px 8px;margin-bottom:8px}
 .rq-s{font-family:'Noto Serif',serif;font-weight:700;font-size:16.5px;line-height:1.6;background:#f8f7f4;border-left:4px solid var(--navy);border-radius:8px;padding:10px 12px;margin-bottom:10px}
 .rq-q{font-weight:700;font-size:15px}
-.rq-p{font-family:'Noto Serif',serif;font-size:15px;line-height:1.8;background:#f8f7f4;border:1px solid #e7e2d6;border-radius:10px;padding:12px 14px;margin:8px 0 12px;text-align:left;word-break:normal}
+.rq-p{font-family:'Noto Serif',serif;font-size:13.5px;line-height:1.62;letter-spacing:-.25px;word-spacing:-.5px;background:#f8f7f4;border:1px solid #e7e2d6;border-radius:10px;padding:10px 11px;margin:6px 0 10px;text-align:left;word-break:normal}
+.ropts.pq{gap:6px}.ropts.pq .ropt{font-size:13px;line-height:1.4;letter-spacing:-.45px;padding:8px 10px;gap:6px;border-radius:10px}
+@media (min-width:600px){.rq-p{font-size:14.5px;line-height:1.7;letter-spacing:-.1px;word-spacing:0;padding:12px 14px}.ropts.pq .ropt{font-size:14px;letter-spacing:-.2px}}
 .rq-p u.tg{font-weight:800;text-decoration:underline 2px;text-underline-offset:3px;color:var(--navy)}
-.rvp{margin:6px 0}.rvp summary{cursor:pointer;font-size:12.5px;color:#475569;font-weight:700}.rvp .rq-p{font-size:13.5px}
+.rvp{margin:6px 0}.rvp summary{cursor:pointer;font-size:12.5px;color:#475569;font-weight:700}.rvp .rq-p{font-size:12.5px}
 .gopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
 .gopt{border:2px solid #bfd6d8;background:var(--soft);color:var(--navy);border-radius:12px;padding:14px 6px;font:700 17px 'Noto Serif',serif;cursor:pointer}
 .gopt.ok{background:#22c55e;border-color:#22c55e;color:#fff}.gopt.no{background:#fee2e2;border-color:#ef4444;color:#b91c1c}
@@ -1084,7 +1086,7 @@ function quizQ() {
   let body = '';
   if (k === 'r') { const q = RD[rdIdx(i)];
     body = (q.passage ? `<span class="rq-t">${q.type}</span><div class="rq-q">${q.q || `다음 글의 ${q.type}로 가장 적절한 것은?`}</div><div class="rq-p">${passageHTML(q)}</div>`
-      : `<span class="rq-t">${q.type}</span><div class="rq-s">${D[q.sid].en}</div><div class="rq-q">다음 문장의 ${q.type}${q.type === '요지' ? '로' : '으로'} 가장 적절한 것은?</div>`) + `<div class="ropts">${q.opts.map((o, j) => `<button class="ropt" data-j="${j}"><span class="rn2">${'①②③④⑤'[j]}</span><span>${o}</span></button>`).join('')}</div>`;
+      : `<span class="rq-t">${q.type}</span><div class="rq-s">${D[q.sid].en}</div><div class="rq-q">다음 문장의 ${q.type}${q.type === '요지' ? '로' : '으로'} 가장 적절한 것은?</div>`) + `<div class="ropts${q.passage ? ' pq' : ''}">${q.opts.map((o, j) => `<button class="ropt" data-j="${j}"><span class="rn2">${'①②③④⑤'[j]}</span><span>${o}</span></button>`).join('')}</div>`;
   } else if (k === 'g') { const q = G[i];
     body = `<p class="qs-en">${q.pre}<span class="blank">?</span>${q.post}</p><div class="gopts">${q.opts.map((o, j) => `<button class="gopt" data-j="${j}">${o}</button>`).join('')}</div>`;
   } else { const q = W[i];
